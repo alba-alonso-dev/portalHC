@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Datos Ambientales Hiberus - Propuesta Funcional</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    line-height:1.6;
+    margin:40px;
+    color:#333;
+}
+
+h1{
+    color:#0F4C81;
+    border-bottom:3px solid #0F4C81;
+    padding-bottom:10px;
+}
+
+h2{
+    color:#0F4C81;
+    margin-top:40px;
+}
+
+h3{
+    color:#1F6AA5;
+}
+
+.section{
+    background:#f8f9fa;
+    border-left:5px solid #0F4C81;
+    padding:15px;
+    margin:20px 0;
+}
+
+.phase{
+    margin-top:30px;
+    padding:20px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    background:#fff;
+}
+
+ul{
+    margin-top:5px;
+}
+
+.objective{
+    background:#eef7ff;
+    padding:10px;
+    border-radius:5px;
+}
+
+.footer{
+    margin-top:50px;
+    padding-top:20px;
+    border-top:1px solid #ccc;
+    color:#666;
+}
+
+@media print {
+      body { background: white; font-size: 11pt; }
+      header { break-after: page; }
+      .card, .sheet-item, .cl-group, table { page-break-inside: avoid; break-inside: avoid; }
+      .section-title { page-break-after: avoid; break-after: avoid; }
+      .flow { page-break-inside: avoid; }
+      main { max-width: 100%; margin: 0; padding: 0; }
+      @page { size: A4; margin: 1.5cm; }
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Portal de Datos Ambientales Hiberus</h1>
+
+<div class="section">
+    <h2>Visión General</h2>
+
+    <p>
+        Evolucionar la solución actual de procesamiento de facturas eléctricas
+        hacia una plataforma centralizada para la recopilación,
+        almacenamiento, validación y explotación de información ambiental
+        de la compañía.
+    </p>
+
+    <p>
+        El objetivo es disponer de un único punto de entrada para la información
+        necesaria en el cálculo de la Huella de Carbono y otros indicadores ESG,
+        reduciendo el trabajo manual y mejorando la trazabilidad de los datos.
+    </p>
+</div>
+
+<div class="section">
+    <h2>Objetivos Estratégicos</h2>
+
+    <ul>
+        <li>Automatizar la captura de datos ambientales.</li>
+        <li>Reducir la introducción manual de información.</li>
+        <li>Mantener trazabilidad completa de los cálculos.</li>
+        <li>Gestionar históricos y auditorías.</li>
+        <li>Facilitar la obtención de indicadores ESG.</li>
+        <li>Preparar la integración con SharePoint, Databricks y Power BI.</li>
+        <li>Permitir la reutilización de datos en futuros ejercicios.</li>
+    </ul>
+</div>
+
+<h2>Diagrama de Flujo del Portal de Datos Ambientales</h2>
+
+<div class="section">
+
+    <p>
+        Flujo objetivo de captura, procesamiento y explotación de datos
+        ambientales corporativos.
+    </p>
+
+<pre style="overflow:auto; background:#f5f5f5; padding:20px; border-radius:6px;">
+
+┌─────────────────┐
+│   Usuario       │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Fuentes de Datos│
+├─────────────────┤
+│ SharePoint      │
+│ PDFs Locales    │
+│ Correo          │
+│ APIs Externas   │
+│ ERP             │
+└────────┬────────┘
+         │
+         ▼
+┌────────────────────────────┐
+│ Portal de Datos Ambientales│
+│ Captura y Gestión          │
+└────────┬───────────────────┘
+         │
+         ▼
+┌────────────────────────────┐
+│ OCR + IA                   │
+│ Extracción de Datos        │
+└────────┬───────────────────┘
+         │
+         ▼
+┌────────────────────────────┐
+│ Validación                 │
+│ Calidad del Dato           │
+│ Revisión Manual            │
+└────────┬───────────────────┘
+         │
+         ▼
+┌────────────────────────────┐
+│ Factores de Emisión        │
+│ Histórico y Versionado     │
+└────────┬───────────────────┘
+         │
+         ▼
+┌────────────────────────────┐
+│ Cálculo de Emisiones       │
+│ Estimaciones               │
+│ Recalculos                 │
+└────────┬───────────────────┘
+         │
+         ▼
+┌────────────────────────────┐
+│ Base Operativa             │
+│ Datos Ambientales          │
+└────────┬───────────────────┘
+         │
+         ├─────────► Excel
+         │
+         ├─────────► Informes
+         │
+         ▼
+┌────────────────────────────┐
+│ Databricks + Data Lake     │
+└────────┬───────────────────┘
+         │
+         ▼
+┌────────────────────────────┐
+│ Power BI                   │
+│ ESG                        │
+│ CSRD                       │
+│ Huella de Carbono          │
+└────────────────────────────┘
+
+</pre>
+
+</div>
+
+<h2>Fase 1 – Evolución del Portal de Facturas Eléctricas</h2>
+
+<div class="phase">
+
+    <div class="objective">
+        <strong>Objetivo:</strong>
+        Mejorar la extracción automática y el almacenamiento de información.
+    </div>
+
+    <h3>Mejoras incluidas</h3>
+
+    <ul>
+        <li>Lectura automática del periodo de facturación desde la factura.</li>
+        <li>Eliminación de la selección manual de fechas.</li>
+        <li>Carga masiva de múltiples facturas PDF.</li>
+        <li>Procesamiento por lotes.</li>
+        <li>Validación de errores de OCR.</li>
+        <li>Revisión manual cuando sea necesario.</li>
+    </ul>
+
+    <h3>Nuevos datos extraídos</h3>
+
+    <ul>
+        <li>Comercializadora.</li>
+        <li>Sociedad facturada.</li>
+        <li>Dirección del suministro.</li>
+        <li>Fecha de emisión.</li>
+        <li>Periodo de facturación.</li>
+        <li>Días facturados.</li>
+    </ul>
+
+    <h3>Mejoras Excel</h3>
+
+    <ul>
+        <li>País.</li>
+        <li>Sede.</li>
+        <li>Sociedad.</li>
+        <li>Comercializadora.</li>
+        <li>Dirección.</li>
+        <li>Periodo completo.</li>
+        <li>Consumo.</li>
+        <li>Factor utilizado.</li>
+        <li>Emisiones calculadas.</li>
+    </ul>
+
+</div>
+
+<h2>Fase 2 – Gestión de Factores de Emisión</h2>
+
+<div class="phase">
+
+    <div class="objective">
+        <strong>Objetivo:</strong>
+        Mantener un repositorio administrable y auditable de factores de emisión.
+    </div>
+
+    <h3>Módulo de Factores de Emisión</h3>
+
+    <ul>
+        <li>Alta de nuevos factores.</li>
+        <li>Modificación de factores existentes.</li>
+        <li>Histórico de cambios.</li>
+        <li>Control por país y año.</li>
+        <li>Gestión de versiones.</li>
+        <li>Activar y desactivar factores.</li>
+    </ul>
+
+    <h3>Información almacenada</h3>
+
+    <ul>
+        <li>País.</li>
+        <li>Año.</li>
+        <li>Factor de emisión.</li>
+        <li>Unidad.</li>
+        <li>Fuente oficial.</li>
+        <li>Fecha de actualización.</li>
+        <li>Usuario responsable.</li>
+    </ul>
+
+</div>
+
+<h2>Fase 3 – Recalculo y Estimaciones</h2>
+
+<div class="phase">
+
+    <div class="objective">
+        <strong>Objetivo:</strong>
+        Permitir actualizar cálculos sin volver a procesar las facturas.
+    </div>
+
+    <h3>Recalculo automático</h3>
+
+    <ul>
+        <li>Recalcular por país.</li>
+        <li>Recalcular por año.</li>
+        <li>Recalcular histórico completo.</li>
+        <li>Mantener histórico de cálculos anteriores.</li>
+        <li>Comparar factor antiguo y nuevo.</li>
+    </ul>
+
+    <h3>Estimaciones automáticas</h3>
+
+    <ul>
+        <li>Detección de periodos sin factura.</li>
+        <li>Estimación mediante históricos.</li>
+        <li>Estimación por periodos equivalentes.</li>
+        <li>Marcado de registros estimados.</li>
+    </ul>
+
+    <h3>Histórico documental</h3>
+
+    <ul>
+        <li>Consulta por año.</li>
+        <li>Consulta por país.</li>
+        <li>Consulta por sede.</li>
+        <li>Búsquedas avanzadas.</li>
+    </ul>
+
+</div>
+
+<h2>Fase 4 – Integración con SharePoint Corporativo</h2>
+
+<div class="phase">
+
+    <div class="objective">
+        <strong>Objetivo:</strong>
+        Eliminar dependencias de almacenamiento local y utilizar SharePoint como repositorio corporativo.
+    </div>
+
+    <h3>Integración documental</h3>
+
+    <ul>
+        <li>Lectura directa desde bibliotecas SharePoint.</li>
+        <li>Detección automática de nuevas facturas.</li>
+        <li>Procesamiento incremental.</li>
+        <li>Evitar reprocesamientos.</li>
+        <li>Ejecución programada.</li>
+    </ul>
+
+    <h3>Trazabilidad</h3>
+
+    <ul>
+        <li>URL de SharePoint.</li>
+        <li>Fecha de procesamiento.</li>
+        <li>Identificador documental.</li>
+        <li>Estado de la validación.</li>
+    </ul>
+
+    <h3>Beneficios</h3>
+
+    <ul>
+        <li>Repositorio único.</li>
+        <li>Trabajo colaborativo.</li>
+        <li>Menor almacenamiento local.</li>
+        <li>Preparación para Power Automate.</li>
+        <li>Preparación para integración con Databricks.</li>
+    </ul>
+
+</div>
+
+<h2>Fase 5 – Expansión a Otros Datos Ambientales</h2>
+
+<div class="phase">
+
+    <div class="objective">
+        <strong>Objetivo:</strong>
+        Convertir la solución en una plataforma transversal de gestión ambiental.
+    </div>
+
+    <h3>Módulos previstos</h3>
+
+    <ul>
+        <li>Electricidad.</li>
+        <li>Gas natural.</li>
+        <li>Agua.</li>
+        <li>Combustibles.</li>
+        <li>Gestión de residuos.</li>
+        <li>Viajes corporativos.</li>
+        <li>Otros consumos ambientales.</li>
+    </ul>
+
+    <h3>Funcionalidades comunes</h3>
+
+    <ul>
+        <li>OCR.</li>
+        <li>Validaciones.</li>
+        <li>Factores de emisión.</li>
+        <li>Estimaciones.</li>
+        <li>Históricos.</li>
+        <li>Exportación Excel.</li>
+        <li>Power BI.</li>
+    </ul>
+
+</div>
+
+<h2>Fase 6 – Integración con Databricks y Data Lake Corporativo</h2>
+
+<div class="phase">
+
+    <div class="objective">
+        <strong>Objetivo:</strong>
+        Evolucionar el Portal de Datos Ambientales desde una herramienta de captura
+        y gestión documental hacia una plataforma integrada dentro del ecosistema
+        corporativo de datos de Hiberus.
+    </div>
+
+    <h3>Arquitectura objetivo</h3>
+
+    <p>
+        El portal actuará como capa de captura y validación de información,
+        mientras que Databricks y el Data Lake corporativo se convertirán en
+        el repositorio central de datos ambientales.
+    </p>
+
+    <p>
+        Los usuarios continuarán trabajando desde una interfaz sencilla,
+        pero la información procesada se almacenará y explotará de forma
+        corporativa junto con el resto de los datos de la organización.
+    </p>
+
+    <h3>Integración con Databricks</h3>
+
+    <ul>
+        <li>Envío automático de los datos procesados a Databricks.</li>
+        <li>Almacenamiento en tablas corporativas normalizadas.</li>
+        <li>Sincronización incremental de nuevos registros.</li>
+        <li>Control de calidad y validación de datos.</li>
+        <li>Gestión centralizada de históricos.</li>
+        <li>Escalabilidad para grandes volúmenes de información.</li>
+    </ul>
+
+    <h3>Integración con Data Lake</h3>
+
+    <ul>
+        <li>Almacenamiento centralizado de la información ambiental.</li>
+        <li>Consolidación de datos de distintos países y sedes.</li>
+        <li>Fuente única de información corporativa.</li>
+        <li>Trazabilidad completa de los datos utilizados en los cálculos.</li>
+    </ul>
+
+    <h3>Nuevas fuentes de información</h3>
+
+    <p>
+        Además de la información extraída mediante OCR, se podrán incorporar
+        otras fuentes corporativas:
+    </p>
+
+    <ul>
+        <li>SharePoint.</li>
+        <li>Viajes corporativos.</li>
+        <li>ERP financiero.</li>
+        <li>Sistemas de compras.</li>
+        <li>Gestión de flotas.</li>
+        <li>Sistemas de Facilities.</li>
+        <li>Gestores energéticos.</li>
+        <li>APIs externas de factores de emisión.</li>
+    </ul>
+
+    <h3>Explotación y análisis</h3>
+
+    <ul>
+        <li>Dashboards corporativos en Power BI.</li>
+        <li>Indicadores ESG consolidados.</li>
+        <li>Seguimiento de objetivos de sostenibilidad.</li>
+        <li>Análisis por país, sede y sociedad.</li>
+        <li>Informes regulatorios.</li>
+        <li>Preparación de auditorías.</li>
+    </ul>
+
+    <h3>Automatización avanzada</h3>
+
+    <ul>
+        <li>Actualización automática de factores de emisión.</li>
+        <li>Detección de anomalías en consumos.</li>
+        <li>Identificación de facturas duplicadas.</li>
+        <li>Generación automática de estimaciones.</li>
+        <li>Procesamiento programado sin intervención manual.</li>
+    </ul>
+
+    <h3>Aplicación de Inteligencia Artificial</h3>
+
+    <ul>
+        <li>OCR avanzado sobre documentos complejos.</li>
+        <li>Clasificación automática de documentos.</li>
+        <li>Extracción inteligente de campos.</li>
+        <li>Detección de inconsistencias.</li>
+        <li>Asistente para validación de datos ambientales.</li>
+    </ul>
+
+    <h3>Beneficios esperados</h3>
+
+    <ul>
+        <li>Repositorio único corporativo de datos ambientales.</li>
+        <li>Reducción de tareas manuales.</li>
+        <li>Mejora de la calidad de datos.</li>
+        <li>Mayor escalabilidad.</li>
+        <li>Trazabilidad completa de cálculos e indicadores.</li>
+        <li>Integración nativa con el ecosistema de datos de Hiberus.</li>
+    </ul>
+
+</div>
+
+<h2>Arquitectura de Datos Propuesta</h2>
+
+<div class="section">
+
+    <h3>Principio de almacenamiento</h3>
+
+    <p>
+        Siempre que sea posible, evitar almacenar copias de los PDFs
+        dentro de la aplicación.
+    </p>
+
+    <p>
+        El sistema almacenará únicamente la información relevante extraída
+        durante el procesamiento.
+    </p>
+
+    <h3>Información almacenada</h3>
+
+    <ul>
+        <li>Identificador del documento.</li>
+        <li>URL SharePoint (si aplica).</li>
+        <li>País.</li>
+        <li>Sede.</li>
+        <li>Sociedad.</li>
+        <li>Comercializadora.</li>
+        <li>Dirección.</li>
+        <li>Periodo.</li>
+        <li>Consumo.</li>
+        <li>Factor utilizado.</li>
+        <li>Emisiones calculadas.</li>
+        <li>Trazabilidad del cálculo.</li>
+    </ul>
+
+</div>
+
+<h2>Visión Final</h2>
+
+<div class="section">
+
+    <p>
+        El Portal de Datos Ambientales Hiberus se concibe como una plataforma
+        corporativa para centralizar la información necesaria para:
+    </p>
+
+    <ul>
+        <li>Huella de Carbono.</li>
+        <li>CSRD.</li>
+        <li>ISO 14064.</li>
+        <li>Indicadores ESG.</li>
+        <li>Power BI corporativo.</li>
+        <li>Procesos de auditoría ambiental.</li>
+    </ul>
+
+    <p>
+        La solución permitirá reutilizar los mismos componentes de captura,
+        validación, cálculo y trazabilidad para cualquier fuente de datos
+        ambiental que se incorpore en el futuro.
+    </p>
+
+</div>
+
+<div class="footer">
+    <strong>Portal de Datos Ambientales Hiberus</strong><br>
+    Propuesta funcional y roadmap evolutivo.
+</div>
+
+</body>
+</html>

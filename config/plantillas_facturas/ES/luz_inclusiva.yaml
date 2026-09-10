@@ -1,0 +1,89 @@
+version_esquema: 2
+
+codigo: luz_inclusiva
+nombre_canonico: "Luz Inclusiva"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - fecha_factura
+  - cups
+  - tarifa
+  - potencia
+  - contrato
+  - importe
+  - distribuidora
+  - sociedad
+  - direccion
+
+# 'LUZ SOLIDARIA INCLUSIVA' es la razón social del pie de factura y es lo que
+# identifica de verdad al emisor. Es más largo que 'ENDESA' o 'IBERDROLA', que
+# aparecen en estas mismas facturas como DISTRIBUIDORA — 'FECSA (ENDESA)',
+# 'IBERDROLA DISTRIBUCIÓN ELÉCTRICA' — y como mapa_deteccion() ordena de más
+# largo a más corto, gana el emisor correcto y no la distribuidora.
+patrones_deteccion:
+  - "LUZ SOLIDARIA INCLUSIVA"
+  - "LUZ INCLUSIVA"
+  - "luzinclusiva.com"
+
+reglas_extraccion:
+
+  consumo:
+    patron: 'Consumo\s+total\s*:\s*([\d.,]+)\s*kWh'
+    confianza: 0.96
+    agregacion: primer_grupo
+
+  periodo:
+    patron: 'Periodo\s+de\s+facturaci[oó]n:\s*(\d{2}/\d{2}/\d{4})\s*-\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.95
+
+  fecha_factura:
+    patron: 'Fecha\s+de\s+factura:\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.95
+
+  cups:
+    patron: 'CUPS:\s*(ES[A-Z0-9]{18,22})'
+    confianza: 0.99
+
+  # La factura escribe 'Tarifa de acceso: 3.0 TD' — CON espacio antes de TD.
+  # El patrón anterior era '(2\.0TD|3\.0TD|6\.1TD)' y no casaba nunca.
+  tarifa:
+    patron: 'Tarifa\s+de\s+acceso:\s*([\d.]+\s*TD)'
+    confianza: 0.95
+
+  # Igual que en Luzía: rótulo y valores van en líneas distintas.
+  potencia:
+    patron: 'P1:\s*([\d.,]+)\s*kW'
+    confianza: 0.90
+
+  contrato:
+    patron: 'Nº\s*Contrato:\s*([A-Z0-9]+)'
+    confianza: 0.90
+
+  importe:
+    patron: 'Total:\s*([\d.,]+)\s*€'
+    confianza: 0.90
+
+  distribuidora:
+    patron: 'Distribuidora:\s*([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ ().,]{3,60})'
+    confianza: 0.90
+
+  # Tres de las 33 facturas de 2026 no llevan el rótulo 'Titular' y solo
+  # identifican al cliente bajo 'DIRECCIÓN DE CORRESPONDENCIA'. Se cubren
+  # ambas variantes en un único grupo. Verificado en 33/33.
+  sociedad:
+    patron: '(?:Titular\s*:?|DIRECCI[ÓO]N\s+DE\s+CORRESPONDENCIA\s*\d*\s*\n)\s*([A-ZÁÉÍÓÚÑ][^\n]{5,60})'
+    confianza: 0.88
+
+  # AVISO: el PDF superpone las etiquetas del gráfico de consumo sobre el
+  # bloque de la dirección, de modo que a partir de la segunda línea el texto
+  # extraído sale entrelazado ('kW0h 4, 2º-1ª A OFICINAS', 'Sp. Oc. Nv.').
+  # Por eso se captura SOLO la primera línea: es la única recuperable de
+  # forma fiable. La dirección queda incompleta a propósito; completarla
+  # exigiría extracción por coordenadas, no por texto plano.
+  direccion:
+    patron: 'Direcci[óo]n\s+del\s+punto\s+de\s+suministro:\s*\n?([^\n]{8,80})'
+    confianza: 0.70

@@ -1,0 +1,32 @@
+<!-- Modal: Limpiar datos de prueba -->
+<div class="modal fade" id="modalResetDatos" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title"><i class="fa-solid fa-triangle-exclamation me-2"></i>Limpiar datos de prueba</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-2">Se eliminarán <strong>todas las facturas</strong> y datos transaccionales:</p>
+        <ul class="small text-muted mb-3">
+          <li>Facturas e historial</li>
+          <li>Lotes de carga</li>
+          <li>Recálculos e historial de recálculo</li>
+          <li>Estimaciones</li>
+          <li>Periodos faltantes</li>
+          <li>Log de sincronización</li>
+        </ul>
+        <div class="alert alert-success py-2 mb-0" style="font-size:.85rem;">
+          <i class="fa-solid fa-shield-halved me-1"></i>
+          Los <strong>factores de emisión, fuentes, países, sedes y comercializadoras</strong> no se tocarán.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="ejecutarResetDatos()">
+          <i class="fa-solid fa-trash-can me-1"></i>Confirmar limpieza
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

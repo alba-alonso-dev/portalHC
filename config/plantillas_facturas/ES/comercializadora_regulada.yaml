@@ -1,0 +1,6 @@
+codigo: comercializadora_regulada
+nombre_canonico: "Comercializadora Regulada"
+pais: ES
+tipo_energia: electricidad
+patrones_deteccion:
+  - "COMERCIALIZADORA REGULADA"

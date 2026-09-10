@@ -1,0 +1,23 @@
+<!-- Modal: Admin maestros (crear/editar) -->
+<div class="modal fade" id="modalAdminMaestro" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="admin-modal-titulo"><i class="fa-solid fa-pen me-2"></i>Editar maestro</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="admin-form" onsubmit="return false;">
+          <!-- Campos inyectados dinámicamente según el tipo de maestro -->
+          <div id="admin-form-campos"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="adminGuardar()">
+          <i class="fa-solid fa-floppy-disk me-1"></i>Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

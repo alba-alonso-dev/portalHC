@@ -1,0 +1,27 @@
+version_esquema: 2
+
+codigo: acta_gastos_cyberco
+nombre_canonico: "Acta Gastos Operacionales Edificio Telefónica"
+pais: CL
+
+categoria: gasto_operacional_no_energetico
+
+patrones_deteccion:
+  - "ACTA CYBERCO"
+  - "GASTOS OPERACIONALES"
+
+# PLANTILLA DE SOLO DETECCIÓN — sin reglas_extraccion y a propósito.
+#
+# Los documentos de la sede de Santiago de Chile no son facturas de suministro
+# eléctrico: son actas de prorrateo de gastos operacionales del Edificio
+# Telefónica, expresadas íntegramente en CLP y SIN ninguna magnitud física.
+# No contienen kWh, ni lecturas de contador, ni potencia: no hay consumo
+# energético que extraer de ellas.
+#
+# Su función aquí es que el pipeline los reconozca y los clasifique como gasto
+# no energético en lugar de tratarlos como facturas ilegibles y acumularlos en
+# la cola de revisión manual factura a factura.
+#
+# PENDIENTE: para poder calcular la huella de la sede de Chile hace falta
+# solicitar al administrador del edificio el detalle de kWh imputados a
+# HIBERUS, que estas actas no desglosan.

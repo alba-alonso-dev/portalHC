@@ -1,0 +1,83 @@
+version_esquema: 2
+
+codigo: contigo_energia
+nombre_canonico: "Contigo Energía"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - fecha_factura
+  - cups
+  - tarifa
+  - contrato
+  - potencia
+  - importe
+  - distribuidora
+  - sociedad
+  - direccion
+
+patrones_deteccion:
+  - "CONTIGO ENERGIA"
+  - "CONTIGO ENERGÍA"
+  - "GESTERNOVA"
+
+reglas_extraccion:
+
+  # BUG CORREGIDO: el patrón anterior era '([\d.,]+)\s*kWh' — el PRIMER número
+  # seguido de kWh que apareciese en la factura. En la práctica capturaba la
+  # línea 'P1. Energía activa 1596,000 kWh' y daba el consumo de un solo
+  # periodo por consumo total: 1.596 kWh en vez de 4.303 kWh (-63%).
+  # 'Importe cargos de energía activa' sí liquida el total de los seis
+  # periodos y aparece una única vez.
+  consumo:
+    patron: 'Importe\s+cargos\s+de\s+energ[ií]a\s+activa\s+([\d.,]+)\s*kWh'
+    confianza: 0.95
+    agregacion: primer_grupo
+
+  periodo:
+    patron: 'Per[íi]odo\s+de\s+facturaci[óo]n:\s*(\d{2}/\d{2}/\d{4})\s*-\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.95
+
+  fecha_factura:
+    patron: 'Fecha\s+emisi[óo]n\s+factura:\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.95
+
+  cups:
+    patron: 'CUPS\s*:\s*(ES[A-Z0-9]{18,22})'
+    confianza: 0.99
+
+  tarifa:
+    patron: 'Tarifa\s*\(Peaje\)\s*:\s*([236]\.[01]TD)'
+    confianza: 0.95
+
+  contrato:
+    patron: 'Ref\.\s*Contrato\s*Suministro\s*:\s*([A-Z0-9\-]+)'
+    confianza: 0.90
+
+  potencia:
+    patron: 'Potencia\s+contratada\s*\(kW\):\s*P1:\s*([\d.,]+)'
+    confianza: 0.90
+
+  importe:
+    patron: 'TOTAL\s+FACTURA:\s*([\d.,]+)\s*€'
+    confianza: 0.92
+
+  distribuidora:
+    patron: '(I-DE\s+REDES\s+ELECTRICAS\s+INTELIGENTES)'
+    confianza: 0.85
+
+  # La factura maqueta a dos columnas: el titular queda en la línea siguiente
+  # al rótulo 'DATOS DEL TITULAR' y comparte línea con 'Nº Factura:', que se
+  # usa aquí como delimitador derecho. Verificado en 6/6 facturas de 2026.
+  sociedad:
+    patron: 'DATOS\s+DEL\s+TITULAR[^\n]*\n\s*([A-ZÁÉÍÓÚÑ][^\n]{5,60}?)\s+N[ºo°]\s*Factura'
+    confianza: 0.90
+
+  # Misma maquetación a dos columnas: la dirección del punto de suministro
+  # comparte línea con 'Ref. Contrato Suministro'. Verificado en 6/6.
+  direccion:
+    patron: '\n([A-ZÁÉÍÓÚÑ][^\n]{8,60}?)\s+Ref\.\s*Contrato\s+Suministro'
+    confianza: 0.88

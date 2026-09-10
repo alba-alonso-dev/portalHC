@@ -1,0 +1,109 @@
+version_esquema: 2
+
+codigo: iberdrola
+nombre_canonico: "Iberdrola"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - fecha_factura
+  - cups
+  - tarifa
+  - contrato
+  - potencia
+  - importe
+  - distribuidora
+  - direccion
+  - sociedad
+
+patrones_deteccion:
+  - "IBERDROLA CLIENTES"
+  - "IBERDROLA"
+  - "www.iberdrola.es"
+  - "@TuIberdrola"
+
+zona:
+  comercializadora: [0.00, 0.00, 1.00, 0.25]
+  periodo: [0.00, 0.00, 1.00, 0.35]
+  consumo: [0.00, 0.20, 1.00, 1.00]
+  cups: [0.00, 0.20, 1.00, 0.80]
+  direccion: [0.00, 0.10, 1.00, 0.60]
+
+reglas_extraccion:
+
+  # El bloque 'INFORMACIÓN SOBRE CONSUMO' imprime en una sola línea el consumo
+  # total de la factura seguido del consumo medio diario y del medio de los
+  # últimos 14 meses: '405 kWh 3,65 € 3,65 €'. Esa terna es única en el
+  # documento. El patrón anterior ('Total\s+([\d.]+)\s*kWh\s+hasta') describía
+  # un texto que no existe en ninguna factura de Iberdrola de la muestra.
+  consumo:
+    patron: '([\d.,]+)\s*kWh\s+[\d.,]+\s*€\s+[\d.,]+\s*€'
+    confianza: 0.93
+    agregacion: primer_grupo
+
+  # Los rótulos 'PERIODO DE FACTURACIÓN:' y 'Nº FACTURA:' se imprimen en una
+  # línea y sus valores en la siguiente, por lo que hay que permitir el salto
+  # explícitamente ([\s\S]) — las reglas NO se compilan con DOTALL.
+  periodo:
+    patron: 'PERIODO\s+DE\s+FACTURACI[ÓO]N:[\s\S]{0,60}?(\d{2}/\d{2}/\d{4})\s*-\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.95
+
+  fecha_factura:
+    patron: 'FECHA\s+DE\s+EMISI[ÓO]N:[\s\S]{0,40}?(\d{1,2}\s+de\s+[A-Za-zñÑáéíóú]+\s+de\s+\d{4})'
+    confianza: 0.93
+
+  cups:
+    patron: '(ES\s*\d{4}\s*\d{4}\s*\d{4}\s*\d{4}\s*[A-Z]{2})'
+    confianza: 0.99
+
+  # 'Nº DE CONTRATO:878937420' — sin espacio tras los dos puntos y en
+  # mayúsculas. El patrón anterior ('Número de contrato:') no existe.
+  contrato:
+    patron: 'Nº\s*DE\s*CONTRATO:\s*(\d+)'
+    confianza: 0.95
+
+  tarifa:
+    patron: 'Peaje\s+de\s+acceso\s+a\s+la\s+red\s+\(ATR\):\s*([\d.]+\s*TD)'
+    confianza: 0.95
+
+  # Iberdrola imprime la potencia de dos formas distintas según el peaje:
+  # las 2.0TD rotulan 'Potencia punta:' y las 3.0TD/6.1TD, que se maquetan con
+  # otra plantilla, 'Potencia contratada (kW): 24,249 / 24,249 / ...'. Cubrir
+  # solo la primera dejaba sin potencia a la mitad de las facturas.
+  potencia:
+    patron: 'Potencia\s+(?:contratada\s*\(kW\)|punta|P1)\s*:\s*([\d.,]+)'
+    confianza: 0.90
+
+  importe:
+    patron: '([\d.,]+)\s*€\s*\n\s*TOTAL'
+    confianza: 0.90
+
+  # Iberdrola comercializa sobre red ajena: la distribuidora es i-DE en unas
+  # zonas y EDISTRIBUCIÓN (grupo Endesa) en otras — p.ej. Cuarte de Huerva.
+  # Es un dato de la red, no del emisor, y no debe confundirse con la
+  # comercializadora.
+  distribuidora:
+    patron: '(i-DE,?\s*Redes\s+El[ée]ctricas\s+Inteligentes|EDISTRIBUCI[ÓO]N\s+REDES\s*\n?\s*DIGITALES(?:\s+S\.L\.U\.)?)'
+    confianza: 0.85
+
+  # 'direccion' y 'sociedad' se declaraban en campos_disponibles pero NO
+  # existía regla alguna, así que el pipeline caía al comodín genérico
+  # ('C/', 'Av.', ...), que devuelve la PRIMERA dirección del documento —
+  # la del emisor, no la del suministro. Iberdrola imprime el rótulo en una
+  # línea y el valor repartido en las dos siguientes, de ahí el grupo que
+  # abarca dos líneas. Verificado en 8/8 facturas de 2026.
+  direccion:
+    patron: 'Direcci[óo]n\s+de\s+suministro:\s*\n?((?:[^\n]{5,80}\n)[^\n]{0,80})'
+    confianza: 0.88
+
+  # Iberdrola maqueta a dos columnas y el titular queda en la línea ANTERIOR
+  # al rótulo 'Titular', que en las 2.0TD continúa con 'Potencia:' y en las
+  # 3.0TD con la dirección. Sin esta regla el patrón genérico casaba con
+  # 'CIF titular: B10877363' y guardaba el CIF como si fuera la razón social.
+  # Verificado en 8/8 facturas de 2026 (ambas maquetaciones).
+  sociedad:
+    patron: '\n([A-ZÁÉÍÓÚÑ][^\n]{5,60}?)\s*\n\s*Titular[\s:]'
+    confianza: 0.88

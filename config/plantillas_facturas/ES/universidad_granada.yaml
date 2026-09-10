@@ -1,0 +1,54 @@
+version_esquema: 2
+
+codigo: universidad_granada
+nombre_canonico: "Universidad de Granada"
+pais: ES
+
+categoria: repercusion_institucional
+
+campos_disponibles:
+  - consumo
+  - importe
+  - fecha_factura
+  - sociedad
+  - direccion
+
+# La factura de la UGR se genera desde FACe y el extractor de texto la
+# devuelve SIN espacios en los bloques de datos ('UNIVERSIDADDEGRANADA',
+# 'FechadeEmisión:'). El único alias que existía — 'UNIVERSIDAD DE GRANADA' —
+# no casaba en ninguna de las facturas de 2026, que quedaban sin plantilla.
+patrones_deteccion:
+  - "UNIVERSIDAD DE GRANADA"
+  - "UNIVERSIDADDEGRANADA"
+
+reglas_extraccion:
+
+  consumo:
+    patron: 'Consumo\s*el[eé]ctrico\s+([\d.,]+)'
+    confianza: 0.90
+    agregacion: primer_grupo
+
+  importe:
+    patron: 'IMPORTE\s*TOTAL:\s*([\d.,]+)\s*€'
+    confianza: 0.92
+
+  fecha_factura:
+    patron: 'Fecha\s*de\s*Emisi[óo]n\s*:\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.92
+
+  # Igual que los patrones de detección: el texto sale SIN espacios, así que
+  # el destinatario aparece como 'HIBERUSTECNOLOGIASDELAINFORMACIONSL' y
+  # ningún patrón genérico (que asume palabras separadas) puede casarlo. Se
+  # admite también la variante con espacios que aparece en los anexos
+  # contractuales que la UGR adjunta junto a la factura.
+  sociedad:
+    patron: '(HIBERUS[A-ZÁÉÍÓÚÑ ]{0,45})'
+    confianza: 0.85
+
+  direccion:
+    patron: '(CUESTA\s*DEL\s*HOSPICIO\s*HOSPITAL\s*REAL|CUESTADELHOSPICIOHOSPITALREAL)'
+    confianza: 0.95
+
+# NOTA: la UGR factura la cesión de uso de espacios por periodos de dos meses
+# y NO imprime fechas de inicio/fin de suministro, por lo que 'periodo' no es
+# extraíble de este documento y no se declara.

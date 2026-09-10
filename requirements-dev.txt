@@ -1,0 +1,9 @@
+# ──────────────────────────────────────────────────────────────────────
+# requirements-dev.txt — dependencias de desarrollo y testing
+# ──────────────────────────────────────────────────────────────────────
+# Fase 0 — Estabilización: antes no existía requirements-dev.txt aunque
+# tests/ ya tenía 8 archivos de test. pytest estaba instalado pero no
+# declarado. Ahora queda formalizado.
+
+pytest==9.1.1
+pytest-cov==6.0.0

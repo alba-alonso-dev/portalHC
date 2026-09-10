@@ -1,0 +1,6 @@
+codigo: naturgas
+nombre_canonico: "Naturgas"
+pais: ES
+tipo_energia: electricidad
+patrones_deteccion:
+  - "NATURGAS"

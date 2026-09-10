@@ -1,0 +1,61 @@
+    <!-- TAB ESTIMACIONES -->
+    <div id="tab-estimaciones" style="display:none;">
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-3">
+                <select id="est-pais" class="form-select form-select-sm" onchange="detectarGaps()">
+                    <option value="">Todos los países</option>
+                    <option value="AR">Argentina</option>
+                    <option value="CL">Chile</option>
+                    <option value="CO">Colombia</option>
+                    <option value="EC">Ecuador</option>
+                    <option value="ES">España</option>
+                    <option value="MX">México</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="text" id="est-anio" class="form-control form-control-sm"
+                    placeholder="Año" onkeyup="detectarGaps()">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-sm btn-outline-warning w-100" onclick="detectarGaps()">
+                    <i class="fa-solid fa-magnifying-glass me-1"></i>Detectar huecos
+                </button>
+            </div>
+            <div class="col-md-3 ms-auto text-end">
+                <button class="btn btn-sm text-white" style="background:var(--primary);" onclick="abrirModalEstimacion()">
+                    <i class="fa-solid fa-plus me-1"></i>Nueva estimación manual
+                </button>
+            </div>
+        </div>
+
+        <!-- Periodos faltantes -->
+        <div class="form-section mb-3" id="est-gaps-panel" style="display:none;">
+            <h5><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>Periodos sin cobertura detectados</h5>
+            <div class="table-responsive">
+                <table class="table table-hover tabla-historial">
+                    <thead><tr>
+                        <th>País</th><th>Sede</th><th>Mes</th><th>Estado</th><th>Acción</th>
+                    </tr></thead>
+                    <tbody id="est-gaps-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Estimaciones existentes -->
+        <div class="form-section">
+            <h5><i class="fa-solid fa-wand-magic-sparkles me-2"></i>Estimaciones generadas</h5>
+            <div class="table-responsive">
+                <table class="table table-hover tabla-historial">
+                    <thead><tr>
+                        <th>País</th><th>Sede</th><th>Mes</th><th>Método</th>
+                        <th>Consumo est. (kWh)</th><th>Emisiones est. (tCO₂e)</th>
+                        <th>Confianza</th><th>Estado</th><th>Desv. real</th><th>Acciones</th>
+                    </tr></thead>
+                    <tbody id="est-lista-body">
+                        <tr><td colspan="10" class="text-center text-muted py-3">Sin estimaciones</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

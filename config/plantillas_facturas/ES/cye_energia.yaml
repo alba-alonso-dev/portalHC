@@ -1,0 +1,80 @@
+version_esquema: 2
+
+codigo: cye_energia
+nombre_canonico: "CYE Energía"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - fecha_factura
+  - cups
+  - tarifa
+  - potencia
+  - importe
+  - direccion
+  - sociedad
+
+patrones_deteccion:
+  - "CYE ENERGIA"
+  - "CYE ENERGÍA"
+  - "cye-energia.com"
+
+reglas_extraccion:
+
+  # BUG CORREGIDO: el patrón anterior
+  #   'Energ[ií]a\s+a\s+facturar\s*\(kWh\).*?([\d.,]+)'
+  # capturaba SOLO la primera columna de la tabla (el periodo P1) y la daba
+  # por consumo total. En la muestra de 2026 eso infravaloraba el consumo
+  # hasta un 52% (856 kWh en vez de 1.790 kWh) y, por tanto, las emisiones
+  # calculadas a partir de él. La fila tiene siempre las seis columnas
+  # P1..P6, así que se capturan las seis y se suman.
+  consumo:
+    patron: 'Energ[ií]a\s+a\s+facturar\s*\(kWh\)\s*([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)'
+    confianza: 0.96
+    agregacion: suma_grupos
+
+  periodo:
+    patron: 'Periodo\s+de\s+facturaci[oó]n\s+(\d{2}-\d{2}-\d{4})\s*-\s*(\d{2}-\d{2}-\d{4})'
+    confianza: 0.95
+
+  fecha_factura:
+    patron: 'Fecha\s+factura\s+(\d{2}-\d{2}-\d{4})'
+    confianza: 0.95
+
+  cups:
+    patron: 'CUPS\s*:\s*(ES[A-Z0-9]{18,22})'
+    confianza: 0.99
+
+  tarifa:
+    patron: '([236]\.[01]TD)'
+    confianza: 0.90
+
+  potencia:
+    patron: 'Potencia\s+Contratada\s*\(kW\)\s*([\d.,]+)'
+    confianza: 0.90
+
+  importe:
+    patron: 'TOTAL\s+FACTURA\s+([\d.,]+)\s*€'
+    confianza: 0.92
+
+  # El rótulo 'Dirección suministro' va sin dos puntos. Se ancla a él y no al
+  # 'Dirección:' de la cabecera, que es la dirección fiscal del titular.
+  # Verificado en 6/6 facturas de 2026.
+  direccion:
+    patron: 'Direcci[óo]n\s+suministro\s+([^\n]{8,90})'
+    confianza: 0.90
+
+  # CYE no rotula al titular: lo imprime entre 'FACTURA DE ELECTRICIDAD' y su
+  # CIF. Se ancla en el CIF, que es el único elemento estable de ese bloque.
+  # Verificado en 6/6 facturas de 2026.
+  sociedad:
+    patron: '\n([A-ZÁÉÍÓÚÑ][^\n]{5,60}?)\s*\n\s*CIF:\s*[A-Z]\d{8}'
+    confianza: 0.88
+
+# NOTA: se ha retirado el campo 'contrato'. La regla anterior
+# ('Contrato\s+acceso\s*:\s*([A-Z0-9]+)') solo casaba en 2 de las 6 facturas
+# de 2026 porque CYE no imprime referencia de contrato en todas sus series;
+# declararlo obligaba a revisión manual sin aportar dato alguno.

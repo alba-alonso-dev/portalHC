@@ -1,0 +1,66 @@
+version_esquema: 2
+
+codigo: cfe
+nombre_canonico: "Comisión Federal de Electricidad"
+pais: MX
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - fecha_factura
+  - tarifa
+  - contrato
+  - importe
+  - sociedad
+
+patrones_deteccion:
+  - "Comisión Federal de Electricidad"
+  - "CFE370814QI0"
+  - "CFE SUMINISTRADOR DE SERVICIOS BASICOS"
+  - "CFE"
+
+reglas_extraccion:
+
+  # Fila de medición: 'kWh <medidor> <lectura ant> <lectura act> <multip> <consumo>'.
+  consumo:
+    patron: 'kWh\s+\S+\s+[\d.,]+\s+[\d.,]+\s+[\d.,]+\s+([\d.,]+)'
+    confianza: 0.90
+    agregacion: primer_grupo
+
+  # CFE no imprime fecha de emisión como tal: los únicos rótulos de fecha son
+  # 'FECHA LÍMITE DE PAGO' (vencimiento, posterior al periodo, no sirve como
+  # fecha de factura) y el pie 'Fecha, hora y lugar de impresion', que es
+  # cuando CFE genera el documento y sí equivale a la emisión. Además es el
+  # único de los dos en formato dd/mm/aaaa, que es lo que el parser entiende.
+  fecha_factura:
+    patron: 'lugar\s+de\s+impresion\s*:?\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.85
+
+  tarifa:
+    patron: 'TARIFA:\s*([A-Z0-9\-]+)'
+    confianza: 0.92
+
+  contrato:
+    patron: 'NO\.\s*DE\s*SERVICIO:\s*(\d+)'
+    confianza: 0.95
+
+  importe:
+    patron: 'Total\s+([\d,]+\.\d{2})\s*\n'
+    confianza: 0.88
+
+  # El titular figura en el bloque CFDI ('RFC: ... Razón Social: ... Régimen
+  # Fiscal: ...'), todo en una línea. Se delimita por la derecha con
+  # 'Régimen Fiscal' para no arrastrarlo. Verificado en 24/24 de 2026.
+  sociedad:
+    patron: 'Raz[óo]n\s+Social:\s*([^\n]{4,60}?)\s+R[ée]gimen\s+Fiscal'
+    confianza: 0.90
+
+# NOTA — 'periodo' NO se declara a propósito:
+# CFE imprime 'PERIODO FACTURADO: 26 DIC 25 - 25 ENE 26', con mes abreviado en
+# español y año de dos cifras. _extraer_periodo_regla() solo sabe interpretar
+# %d/%m/%Y, así que cualquier regla de periodo aquí capturaría bien el texto
+# pero fallaría al convertirlo a fecha, dejando la factura sin periodo y con un
+# aviso de error en cada procesamiento. La duración del ciclo (mensual) se
+# infiere en el pipeline. Para soportarlo de verdad haría falta añadir el
+# formato de mes abreviado al parser de fechas.

@@ -1,0 +1,61 @@
+version_esquema: 2
+
+codigo: universidad_cantabria
+nombre_canonico: "Universidad de Cantabria"
+pais: ES
+
+categoria: repercusion_institucional
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - fecha_factura
+  - direccion
+
+# El documento es un "Informe de Consumos de Energía" que la UC emite para
+# repercutir el consumo del espacio arrendado (Edificio CDTUC), no una factura
+# de comercializadora.
+#
+# Es un PDF ESCANEADO, así que el texto llega por OCR con un token por línea:
+# el nombre aparece como 'Universidad\nde Cantabria', nunca con el espacio
+# simple del alias. La detección tolera ahora ese espaciado (ver
+# _regex_alias en extraccion_service), por eso el alias con espacios basta.
+patrones_deteccion:
+  - "UNIVERSIDAD DE CANTABRIA"
+  - "Edificio CDTUC"
+
+reglas_extraccion:
+
+  # El informe NO imprime un total de kWh: solo el desglose por período
+  # tarifario, así que el consumo es la suma de P1..P6.
+  #
+  # Se enumeran los SEIS períodos (antes solo P1, P2 y P6, lo que habría
+  # perdido silenciosamente P3+P4+P5 en cuanto dejaran de ser cero).
+  #
+  # Separador '[\s\S]*?' en lugar de '.*?': el motor compila con IGNORECASE
+  # pero SIN DOTALL, y entre un período y el siguiente hay saltos de línea
+  # (precio, EUR/kW, importe, Euros). Con '.*?' el patrón no casaba nunca
+  # sobre el texto OCR.
+  #
+  # El sufijo 'kWh' es lo que separa el TÉRMINO DE ENERGÍA del TÉRMINO DE
+  # POTENCIA, que reutiliza las mismas etiquetas P1..P6 pero en 'kW'.
+  consumo:
+    patron: 'P1:\s*([\d.,]+)\s*kWh[\s\S]*?P2:\s*([\d.,]+)\s*kWh[\s\S]*?P3:\s*([\d.,]+)\s*kWh[\s\S]*?P4:\s*([\d.,]+)\s*kWh[\s\S]*?P5:\s*([\d.,]+)\s*kWh[\s\S]*?P6:\s*([\d.,]+)\s*kWh'
+    confianza: 0.90
+    agregacion: suma_grupos
+
+  periodo:
+    patron: 'Desde:\s*(\d{2}/\d{2}/\d{4})[\s\S]*?Hasta:\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.90
+
+  # El informe no lleva fecha de emisión como tal; 'INFORME CREADO' es la
+  # fecha en que la UC genera la liquidación y es el dato más cercano.
+  fecha_factura:
+    patron: 'INFORME\s*CREADO:\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.80
+
+# AVISO — PDF MULTI-PERÍODO:
+# '1_Trimestre_2026.pdf' agrupa VARIOS meses en un solo PDF (6 páginas). El
+# pipeline asume 1 PDF = 1 factura, así que solo se extrae el PRIMER bloque
+# mensual (enero). Para contabilizar el trimestre completo hay que separar el
+# PDF por meses antes de cargarlo. Ver incidencia 14 del informe.

@@ -1,0 +1,98 @@
+    <!-- TAB HISTORIAL -->
+    <div id="tab-historial" style="display:none;">
+
+        <div class="row g-3 mb-4" id="statsRow" style="display:none;">
+            <div class="col-6 col-md-3"><div class="stat-card"><div class="number" id="st-facturas">-</div><div class="label">Facturas</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat-card"><div class="number" id="st-emisiones">-</div><div class="label">tCO2e totales</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat-card"><div class="number" id="st-consumo">-</div><div class="label">MWh consumidos</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat-card"><div class="number" id="st-paises">-</div><div class="label">Paises</div></div></div>
+        </div>
+
+        <div class="row g-2 mb-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label" style="font-size:.82rem;">Pais</label>
+                <select id="filtroPais" class="form-select form-select-sm" onchange="cargarHistorial()">
+                    <option value="">Todos</option>
+                    <option value="AR">Argentina</option>
+                    <option value="CL">Chile</option>
+                    <option value="CO">Colombia</option>
+                    <option value="EC">Ecuador</option>
+                    <option value="MX">Mexico</option>
+                    <option value="ES">Espana</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" style="font-size:.82rem;">Ano</label>
+                <input type="number" id="filtroAnio" class="form-control form-control-sm"
+                       placeholder="Ej: 2025" min="2020" max="2030" onchange="cargarHistorial()">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" style="font-size:.82rem;">&nbsp;</label>
+                <button class="btn btn-sm btn-outline-secondary w-100 d-block" onclick="descargarExcel()">
+                    <i class="fa-solid fa-file-excel me-1"></i>Descargar Excel
+                </button>
+            </div>
+            <div class="col-md-3 text-end align-self-end">
+                <small id="totalRegistros" class="text-muted"></small>
+                <button class="btn btn-sm btn-outline-danger ms-2" onclick="confirmarResetDatos()"
+                        title="Solo entorno de pruebas">
+                    <i class="fa-solid fa-trash-can me-1"></i>Limpiar datos
+                </button>
+            </div>
+        </div>
+
+        <!-- Consumo mensual agregado: una sede puede tener varios CUPS y por
+             tanto varias facturas en el mismo mes; aqui se ve el total sumado
+             y el desglose que lo compone. -->
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center py-2"
+                 style="cursor:pointer;" onclick="toggleConsumoMensual()">
+                <span style="font-size:.9rem;">
+                    <i class="fa-solid fa-layer-group me-2"></i>
+                    Consumo mensual por sede <small class="text-muted">(suma de todos los CUPS)</small>
+                </span>
+                <span>
+                    <small id="resumenMultiCups" class="text-muted me-2"></small>
+                    <i class="fa-solid fa-chevron-down" id="iconoConsumoMensual"></i>
+                </span>
+            </div>
+            <div class="card-body p-0" id="cuerpoConsumoMensual" style="display:none;">
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0" id="tablaConsumoMensual">
+                        <thead>
+                            <tr>
+                                <th>Pais</th><th>Sede</th><th>Mes</th>
+                                <th class="text-center">Facturas</th>
+                                <th class="text-center">CUPS</th>
+                                <th class="text-end">Consumo total (kWh)</th>
+                                <th class="text-end">tCO2e</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoTablaConsumoMensual"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover tabla-historial" id="tablaHistorial">
+                <thead>
+                    <tr>
+                        <th>Pais</th><th>Sede</th><th>Sociedad</th><th>Comercializadora</th>
+                        <th>Periodo</th><th>Dias</th><th>MWh</th><th>tCO2e</th>
+                        <th>Tarifa</th><th class="text-end">Importe</th>
+                        <th>Estado</th><th>Carga</th><th></th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoTabla">
+                    <tr><td colspan="13" class="text-center text-muted py-4">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <nav id="paginacion" class="mt-3" style="display:none;">
+            <ul class="pagination pagination-sm justify-content-center" id="listaPaginas"></ul>
+        </nav>
+
+    </div>

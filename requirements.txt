@@ -1,0 +1,22 @@
+# ──────────────────────────────────────────────────────────────────────
+# requirements.txt — dependencias de runtime (versiones fijadas)
+# ──────────────────────────────────────────────────────────────────────
+# Fase 0 — Estabilización: todas las dependencias con == para garantizar
+# reproducibilidad. Para reproducibilidad EXACTA (incluyendo dependencias
+# transitivas) usar `pip install -r requirements.lock`.
+#
+# Actualizado: 2026-09-06 con las versiones del entorno verificado.
+
+Flask==3.1.3
+Werkzeug==3.1.8
+psycopg[binary]==3.3.5
+paddlepaddle==3.3.1
+paddleocr==3.7.0
+pdfplumber==0.11.10
+Pillow==12.2.0
+pandas==3.0.3
+openpyxl==3.1.5
+python-dotenv==1.2.2
+numpy==2.3.5
+pyyaml==6.0.2
+opencv-python-headless==4.10.0.84

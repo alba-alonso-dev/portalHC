@@ -1,0 +1,113 @@
+    <!-- TAB INFORME GHG -->
+    <div id="tab-ghg" style="display:none;">
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label class="form-label">Año</label>
+                <input type="number" id="ghg-anio" class="form-control"
+                       placeholder="2025" min="2020" max="2030">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">País (opcional)</label>
+                <select id="ghg-pais" class="form-select">
+                    <option value="">Todos los países</option>
+                    <option value="AR">Argentina</option>
+                    <option value="CL">Chile</option>
+                    <option value="CO">Colombia</option>
+                    <option value="EC">Ecuador</option>
+                    <option value="ES">España</option>
+                    <option value="MX">México</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end gap-2">
+                <button class="btn btn-outline-primary flex-fill" onclick="previewGHG()">
+                    <i class="fa-solid fa-eye me-1"></i>Vista previa
+                </button>
+                <button class="btn text-white flex-fill" style="background:var(--primary);"
+                        onclick="descargarGHG()">
+                    <i class="fa-solid fa-file-excel me-1"></i>Descargar Excel
+                </button>
+            </div>
+        </div>
+
+        <div id="ghg-preview" style="display:none;">
+
+            <!-- Resumen ejecutivo -->
+            <div class="form-section mb-3">
+                <h5 class="fw-bold"><i class="fa-solid fa-chart-bar me-2" style="color:var(--primary);"></i>Resumen Ejecutivo</h5>
+                <div class="row g-3" id="ghg-resumen-kpis"></div>
+            </div>
+
+            <!-- Scopes -->
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <div class="form-section h-100" style="border-left:4px solid #c0392b;">
+                        <h6 class="fw-bold text-danger">Scope 1 — Directo</h6>
+                        <div style="font-size:1.6rem;font-weight:700;" id="ghg-scope1-total">—</div>
+                        <small class="text-muted">tCO₂e — Emisiones directas</small>
+                        <div id="ghg-scope1-detalle" class="mt-2" style="font-size:.82rem;"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-section h-100" style="border-left:4px solid #2980b9;">
+                        <h6 class="fw-bold" style="color:#2980b9;">Scope 2 — Electricidad</h6>
+                        <div style="font-size:1.6rem;font-weight:700;color:#2980b9;" id="ghg-scope2-total">—</div>
+                        <small class="text-muted">tCO₂e — Electricidad comprada</small>
+                        <div id="ghg-scope2-detalle" class="mt-2" style="font-size:.82rem;"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-section h-100" style="border-left:4px solid #27ae60;">
+                        <h6 class="fw-bold text-success">Scope 3 — Indirecto</h6>
+                        <div style="font-size:1.6rem;font-weight:700;color:#27ae60;" id="ghg-scope3-total">—</div>
+                        <small class="text-muted">tCO₂e — Otras emisiones</small>
+                        <div id="ghg-scope3-detalle" class="mt-2" style="font-size:.82rem;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calidad + Metodología -->
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <div class="form-section">
+                        <h6 class="fw-bold mb-2"><i class="fa-solid fa-shield-halved me-1" style="color:var(--primary);"></i>Calidad del Dato</h6>
+                        <div class="progress mb-2" style="height:20px;">
+                            <div class="progress-bar progress-bar-real" id="ghg-bar-real" style="width:0%">
+                                <span id="ghg-pct-real" style="font-size:.75rem;"></span>
+                            </div>
+                            <div class="progress-bar progress-bar-est" id="ghg-bar-est" style="width:0%">
+                                <span id="ghg-pct-est" style="font-size:.75rem;"></span>
+                            </div>
+                            <div class="progress-bar progress-bar-gap" id="ghg-bar-gap" style="width:0%">
+                                <span id="ghg-pct-gap" style="font-size:.75rem;"></span>
+                            </div>
+                        </div>
+                        <div id="ghg-calidad-detalle" style="font-size:.85rem;"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-section">
+                        <h6 class="fw-bold mb-2"><i class="fa-solid fa-microscope me-1" style="color:var(--primary);"></i>Trazabilidad</h6>
+                        <div id="ghg-trazabilidad-detalle" style="font-size:.85rem;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Factores metodología -->
+            <div class="form-section">
+                <h6 class="fw-bold mb-2"><i class="fa-solid fa-book me-1" style="color:var(--primary);"></i>Factores de Emisión Utilizados</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover tabla-historial">
+                        <thead><tr>
+                            <th>País</th><th>Tipo</th><th>Año</th>
+                            <th>Factor (kg CO₂/MWh)</th><th>Fuente</th>
+                            <th>Scope</th><th>Facturas</th>
+                        </tr></thead>
+                        <tbody id="ghg-factores-body">
+                            <tr><td colspan="7" class="text-center text-muted py-3">—</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>

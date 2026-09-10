@@ -1,0 +1,92 @@
+version_esquema: 2
+
+codigo: luzia
+nombre_canonico: "Luzía Energía"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - fecha_factura
+  - cups
+  - tarifa
+  - potencia
+  - contrato
+  - importe
+  - distribuidora
+  - sociedad
+  - direccion
+
+patrones_deteccion:
+  - "LUZÍA ENERGÍA"
+  - "LUZIA ENERGIA"
+  - "luziaenergia.es"
+
+zona:
+  comercializadora: [0.00, 0.00, 0.65, 0.20]
+  periodo: [0.25, 0.10, 0.70, 0.35]
+  consumo: [0.10, 0.25, 1.00, 0.90]
+  cups: [0.00, 0.20, 0.75, 0.55]
+
+reglas_extraccion:
+
+  # El total facturado NO aparece como "Consumo total: N kWh": la factura de
+  # Luzía solo publica el desglose por periodo (P1..P6) en 'Detalles de los
+  # consumos' y cierra la tabla con la fila 'Lectura Real Real <total>'. El
+  # patrón anterior — '(?:TOTAL|Consumo)\s*[:\-]?\s*([\d.,]+)\s*kWh' — no
+  # casaba en NINGUNA factura real, así que el consumo caía siempre al
+  # extractor genérico. Se ancla en la fila de totales, que sí existe.
+  consumo:
+    patron: 'Lectura\s+(?:Real|Estimada)\s+(?:Real|Estimada)\s+([\d.]+)'
+    confianza: 0.95
+    agregacion: primer_grupo
+
+  periodo:
+    patron: '(\d{2}/\d{2}/\d{4})\s*-\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.90
+
+  fecha_factura:
+    patron: 'Fecha\s+de\s+Factura:\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.95
+
+  cups:
+    patron: 'Cups\s*:\s*(ES[A-Z0-9]{18,22})'
+    confianza: 0.99
+
+  contrato:
+    patron: 'Nº\s+de\s+Contrato\s*:\s*([A-Z0-9\-]+)'
+    confianza: 0.90
+
+  # La potencia contratada se imprime como tabla 'P1: 22 kW  P2: 22 kW ...'
+  # bajo el rótulo, en una línea DISTINTA. El patrón anterior exigía el valor
+  # pegado a 'Potencia contratada:' y por eso nunca casaba: las reglas se
+  # aplican con IGNORECASE pero SIN DOTALL, así que '.' no cruza el salto.
+  potencia:
+    patron: 'P1:\s*([\d.,]+)\s*kW'
+    confianza: 0.90
+
+  tarifa:
+    patron: 'Tarifa\s+de\s+acceso:\s*([\d.]+\s*TD)'
+    confianza: 0.95
+
+  importe:
+    patron: 'TOTAL\s+([\d.,]+)\s*€'
+    confianza: 0.90
+
+  distribuidora:
+    patron: 'Distribuidora:\s*([A-ZÁÉÍÓÚÑ][^\n]{4,60})'
+    confianza: 0.90
+
+  sociedad:
+    patron: 'Titular:\s*([^\n]{5,70}?)\s*(?:\n|CONCEPTO)'
+    confianza: 0.92
+
+  # La factura lleva DOS rótulos 'Dirección:': el primero es la dirección
+  # fiscal del titular y el segundo, bajo el bloque 'Punto de suministro',
+  # el emplazamiento real. Sin este anclaje el genérico devolvía la fiscal.
+  # Verificado en 83/83 facturas de 2026.
+  direccion:
+    patron: 'Punto\s+de\s+suministro[\s\S]{0,250}?Direcci[óo]n:\s*\n?([^\n]{10,90})'
+    confianza: 0.90

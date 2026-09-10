@@ -1,0 +1,42 @@
+version_esquema: 2
+
+codigo: naturgy
+nombre_canonico: "Naturgy"
+pais: ES
+tipo_energia: electricidad
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - cups
+
+patrones_deteccion:
+  - "NATURGY"
+
+zona:
+  comercializadora: [0.02, 0.00, 0.62, 0.22]
+  periodo:          [0.34, 0.14, 0.98, 0.44]
+  consumo:          [0.34, 0.30, 0.98, 0.76]
+  cups:             [0.02, 0.16, 0.72, 0.52]
+
+# Migrada del esquema v1 (patron_*_extra planos) al v2 anidado. El contenido
+# de los patrones es el mismo; solo cambia la forma de declararlos, para que
+# deje de depender de la migración implícita en tiempo de carga.
+# SIN VALIDAR CONTRA FACTURA REAL: no hay ninguna factura de Naturgy en el
+# ejercicio 2026 en uploads/, así que los patrones se conservan tal cual.
+reglas_extraccion:
+
+  consumo:
+    patron: '(?:Energ[ií]a\s+activa|Consumo)\s*[:\-]?\s*([\d.,]+)\s*kWh'
+    confianza: 0.92
+    agregacion: primer_grupo
+
+  periodo:
+    patron: '(?:Periodo\s+de\s+facturaci[oó]n|Periodo)\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\s*(?:al|a|-)\s*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
+    confianza: 0.90
+
+  cups:
+    patron: 'CUPS\s*[:\-]?\s*(ES\d{16}[A-Z0-9]{0,2})'
+    confianza: 0.90

@@ -1,0 +1,230 @@
+    <!-- TAB DASHBOARD ESG -->
+    <div id="tab-dashboard" style="display:none;">
+
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <input type="number" id="dash-anio" class="form-control form-control-sm"
+                    style="width:90px;" placeholder="Año" onchange="cargarDashboard()">
+                <select id="dash-pais" class="form-select form-select-sm" style="width:130px;"
+                        onchange="cargarDashboard()">
+                    <option value="">Todos los países</option>
+                    <option value="AR">Argentina</option>
+                    <option value="CL">Chile</option>
+                    <option value="CO">Colombia</option>
+                    <option value="EC">Ecuador</option>
+                    <option value="ES">España</option>
+                    <option value="MX">México</option>
+                </select>
+                <button class="btn btn-sm text-white" style="background:var(--primary);" onclick="cargarDashboard()">
+                    <i class="fa-solid fa-refresh me-1"></i>Actualizar
+                </button>
+            </div>
+            <small class="text-muted" id="dash-ultima-act"></small>
+        </div>
+
+        <!-- KPIs fila 1: Emisiones -->
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-3">
+                <div class="kpi-card">
+                    <div class="kpi-num" id="dash-kpi-emisiones">—</div>
+                    <div class="kpi-lbl"><i class="fa-solid fa-cloud me-1"></i>tCO₂e totales</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="kpi-card orange" id="dash-kpi-variacion-card">
+                    <div class="kpi-num" id="dash-kpi-variacion">—</div>
+                    <div class="kpi-lbl"><i class="fa-solid fa-arrow-trend-up me-1" id="dash-variacion-icon"></i>vs año anterior</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="kpi-card green">
+                    <div class="kpi-num" id="dash-kpi-facturas">—</div>
+                    <div class="kpi-lbl"><i class="fa-solid fa-file-invoice me-1"></i>Facturas activas</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="kpi-card purple">
+                    <div class="kpi-num" id="dash-kpi-sedes">—</div>
+                    <div class="kpi-lbl"><i class="fa-solid fa-building me-1"></i>Sedes activas</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="kpi-card" style="background:linear-gradient(135deg,#1a6b6b,#1abc9c);">
+                    <div class="kpi-num" id="dash-kpi-paises">—</div>
+                    <div class="kpi-lbl" title="Número de países con datos en el año seleccionado"><i class="fa-solid fa-globe me-1"></i>Países</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs fila 2: Cobertura -->
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-3">
+                        <div class="kpi-card green" title="Porcentaje de meses con factura real verificada. Objetivo: ≥80%">
+                    <div class="kpi-num" id="dash-kpi-pct-real">—</div>
+                    <div class="kpi-lbl"><i class="fa-solid fa-check-circle me-1"></i>% Datos reales</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                        <div class="kpi-card orange" title="Porcentaje de meses cubiertos con estimación estadística. No ideales para auditorías.">
+                    <div class="kpi-num" id="dash-kpi-pct-est">—</div>
+                    <div class="kpi-lbl"><i class="fa-solid fa-wand-magic-sparkles me-1"></i>% Estimados</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="kpi-card red">
+                    <div class="kpi-num" id="dash-kpi-pct-gap">—</div>
+                    <div class="kpi-lbl"><i class="fa-solid fa-circle-exclamation me-1"></i>% Faltantes</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="kpi-card gray">
+                    <div class="kpi-num" id="dash-kpi-sedes-pend">—</div>
+                    <div class="kpi-lbl"><i class="fa-solid fa-hourglass me-1"></i>Sedes con gaps</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fila 3: Facturación + Calidad -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <div class="form-section h-100">
+                    <h6 class="fw-bold mb-3"><i class="fa-solid fa-file-invoice me-2" style="color:var(--primary);"></i>Gestión de Facturas</h6>
+                    <div class="row g-2 text-center">
+                        <div class="col-6">
+                            <div class="stat-card"><div class="number text-success" id="dash-fact-revisadas">—</div><div class="label">Revisadas</div></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card"><div class="number text-warning" id="dash-fact-pendientes">—</div><div class="label">Pendientes revisión</div></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card"><div class="number text-danger" id="dash-fact-duplic">—</div><div class="label">Duplicados detectados</div></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card"><div class="number" id="dash-fact-total">—</div><div class="label">Total facturas</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-section h-100">
+                    <h6 class="fw-bold mb-3"><i class="fa-solid fa-shield-halved me-2" style="color:var(--primary);"></i>Calidad de Datos</h6>
+                    <div class="row g-2 text-center">
+                        <div class="col-6">
+                            <div class="stat-card" title="Facturas con confianza OCR inferior al 60%. Revisar manualmente."><div class="number text-danger" id="dash-cal-ocr">—</div><div class="label">OCR bajo (&lt;60%)</div></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card" title="Facturas con consumo superior al 200% de la media de su sede."><div class="number text-warning" id="dash-cal-anomalos">—</div><div class="label">Consumos anómalos</div></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card" title="Puntuación 0-100 basada en OCR, duplicados y consumos anómalos. 100 = datos perfectos."><div class="number text-primary fw-bold" id="dash-cal-score">—</div><div class="label">Score calidad global</div></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card" title="Alertas pendientes de severidad crítica que requieren atención inmediata."><div class="number" id="dash-cal-alertas">—</div><div class="label">Alertas críticas</div></div>
+                        </div>
+                        <div class="col-12 mt-1">
+                            <div class="stat-card" title="Confianza media del reconocimiento óptico (OCR) de todas las facturas del período. Ideal: > 0.90">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span style="font-size:.8rem;color:#666;">OCR medio</span>
+                                    <span class="fw-bold" id="dash-cal-ocr-media" style="font-size:1.1rem;">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-8">
+                <div class="form-section">
+                    <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-line me-2" style="color:var(--primary);"></i>Evolución mensual de emisiones (tCO₂e)</h6>
+                    <canvas id="chart-evolucion" height="120"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-section h-100">
+                    <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-pie me-2" style="color:var(--primary);"></i>Emisiones por país</h6>
+                    <canvas id="chart-por-pais" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Emisores + Scope breakdown -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-8">
+                <div class="form-section h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="fw-bold mb-0"><i class="fa-solid fa-fire-flame-curved me-2" style="color:#e74c3c;"></i>Top emisores por sede</h6>
+                        <small class="text-muted">tCO₂e — año seleccionado</small>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm tabla-historial mb-0">
+                            <thead><tr>
+                                <th>País</th><th>Sede</th>
+                                <th class="text-end">tCO₂e</th>
+                                <th class="text-end">MWh</th>
+                                <th style="width:120px;">Proporción</th>
+                            </tr></thead>
+                            <tbody id="dash-top-emisores-body">
+                                <tr><td colspan="5" class="text-center text-muted py-2">Cargando…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-section h-100">
+                    <h6 class="fw-bold mb-2" title="Clasificación GHG Protocol: Scope 1 = emisiones directas; Scope 2 = electricidad comprada; Scope 3 = cadena de valor.">
+                        <i class="fa-solid fa-chart-pie me-2" style="color:var(--primary);"></i>Emisiones por Scope
+                        <i class="fa-solid fa-circle-question ms-1 text-muted" style="font-size:.8rem;"></i>
+                    </h6>
+                    <canvas id="chart-scope" height="180"></canvas>
+                    <div id="dash-scope-sin-datos" class="text-center text-muted py-3" style="display:none;font-size:.85rem;">Sin datos de scope disponibles</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cobertura barra -->
+        <div class="form-section mb-3">
+            <h6 class="fw-bold mb-2"><i class="fa-solid fa-bars-progress me-2" style="color:var(--primary);"></i>Cobertura global de datos</h6>
+            <div class="progress mb-1" style="height:24px;">
+                <div class="progress-bar progress-bar-real" id="dash-bar-real" style="width:0%" role="progressbar">
+                    <span id="dash-pct-real-bar" style="font-size:.75rem;"></span>
+                </div>
+                <div class="progress-bar progress-bar-est" id="dash-bar-est" style="width:0%" role="progressbar">
+                    <span id="dash-pct-est-bar" style="font-size:.75rem;"></span>
+                </div>
+                <div class="progress-bar progress-bar-gap" id="dash-bar-gap" style="width:0%" role="progressbar">
+                    <span id="dash-pct-gap-bar" style="font-size:.75rem;"></span>
+                </div>
+            </div>
+            <div class="d-flex gap-4 mt-1" style="font-size:.8rem;">
+                <span><i class="fa-solid fa-square me-1" style="color:#27ae60;"></i>Real</span>
+                <span><i class="fa-solid fa-square me-1" style="color:#f39c12;"></i>Estimado</span>
+                <span><i class="fa-solid fa-square me-1" style="color:#e74c3c;"></i>Faltante</span>
+            </div>
+        </div>
+
+        <!-- Tabla sedes top -->
+        <div class="form-section">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="fw-bold mb-0"><i class="fa-solid fa-ranking-star me-2" style="color:var(--primary);"></i>Cobertura por sede</h6>
+                <small class="text-muted">Ordenado por periodos faltantes</small>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover tabla-historial">
+                    <thead><tr>
+                        <th>País</th><th>Sede</th>
+                        <th class="text-center">Reales</th>
+                        <th class="text-center">Estimados</th>
+                        <th class="text-center">Faltantes</th>
+                        <th>Cobertura</th><th class="text-center">Estado</th>
+                    </tr></thead>
+                    <tbody id="dash-sedes-body">
+                        <tr><td colspan="7" class="text-center text-muted py-3">Selecciona un año y pulsa Actualizar</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

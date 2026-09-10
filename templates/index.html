@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Datos Ambientales - Hiberus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="container container-main" style="max-width:1100px;">
+
+    <div class="header">
+        <h1><i class="fa-solid fa-leaf me-2"></i>Portal de Datos Ambientales</h1>
+        <p>Gestion de Facturas Electricas &amp; Huella de Carbono</p>
+    </div>
+
+    {% include 'partials/_nav.html' %}
+
+    {% include 'partials/tabs/carga.html' %}
+    {% include 'partials/tabs/historial.html' %}
+    {% include 'partials/tabs/factores.html' %}
+    {% include 'partials/tabs/recalculo.html' %}
+    {% include 'partials/tabs/estimaciones.html' %}
+    {% include 'partials/tabs/dashboard.html' %}
+    {% include 'partials/tabs/alertas.html' %}
+    {% include 'partials/tabs/ghg.html' %}
+    {% include 'partials/tabs/admin.html' %}
+
+</div>
+
+{% include 'partials/modals/factor.html' %}
+{% include 'partials/modals/fuente.html' %}
+{% include 'partials/modals/estimacion.html' %}
+{% include 'partials/modals/revision.html' %}
+{% include 'partials/modals/reset_datos.html' %}
+{% include 'partials/modals/admin_maestro.html' %}
+
+{% include 'partials/_toast.html' %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Modulos de la SPA: api + core primero, init al final -->
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/core.js') }}"></script>
+<script src="{{ url_for('static', filename='js/facturas.js') }}"></script>
+<script src="{{ url_for('static', filename='js/historial.js') }}"></script>
+<script src="{{ url_for('static', filename='js/factores.js') }}"></script>
+<script src="{{ url_for('static', filename='js/recalculo.js') }}"></script>
+<script src="{{ url_for('static', filename='js/estimaciones.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/alertas.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ghg.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_maestros.js') }}"></script>
+<script src="{{ url_for('static', filename='js/init.js') }}"></script>
+
+</body>
+</html>

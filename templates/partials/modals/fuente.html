@@ -1,0 +1,51 @@
+<!-- MODAL FUENTE (crear / editar) -->
+<div class="modal fade" id="modalFuente" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--primary);color:#fff;">
+                <h5 class="modal-title" id="modalFuenteTitulo">Fuente bibliográfica</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="mfuente-id">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label">Código <span class="text-danger">*</span></label>
+                        <input type="text" id="mfuente-codigo" class="form-control"
+                               placeholder="MITECO_2024">
+                    </div>
+                    <div class="col-md-7">
+                        <label class="form-label">Nombre <span class="text-danger">*</span></label>
+                        <input type="text" id="mfuente-nombre" class="form-control"
+                               placeholder="MITECO v32">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Organización</label>
+                        <input type="text" id="mfuente-organizacion" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Año publicación</label>
+                        <input type="text" id="mfuente-anio" class="form-control" placeholder="2024">
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">URL</label>
+                        <input type="url" id="mfuente-url" class="form-control"
+                               placeholder="https://...">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Notas</label>
+                        <textarea id="mfuente-notas" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                        data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-sm text-white"
+                        style="background:var(--primary);" onclick="guardarFuente()">
+                    <i class="fa-solid fa-save me-1"></i>Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+version_esquema: 2
+
+codigo: reparto_hiberus
+nombre_canonico: "Reparto Electricidad HIBERUS"
+pais: ES
+
+categoria: repercusion_interna
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - importe
+
+# ATENCIÓN: 'CALCULO CONSUMO ELECTRICIDAD' y 'EDIFICIO I. LA CATOLICA' son
+# rótulos del formato de reparto del edificio, NO del inquilino. En la misma
+# carpeta conviven reparto de HIBERUS y reparto de otros inquilinos (p.ej.
+# 'Suma parcial OESIA'), que casan igual. Por eso la regla de consumo se ancla
+# en 'Suma parcial HIBERUS': si el documento es de otro inquilino no extrae
+# consumo y el registro queda marcado para revisión, en vez de imputar a
+# HIBERUS un consumo que no es suyo.
+patrones_deteccion:
+  - "CALCULO CONSUMO ELECTRICIDAD"
+  - "EDIFICIO I. LA CATOLICA"
+  - "Suma parcial HIBERUS"
+
+zona:
+  periodo: [0.00, 0.00, 0.90, 0.20]
+  consumo: [0.00, 0.15, 1.00, 0.90]
+
+reglas_extraccion:
+
+  # El consumo imputado a HIBERUS es la suma de dos conceptos que el propio
+  # documento factura por separado: el consumo propio medido en sus contadores
+  # ('Suma parcial HIBERUS') y la parte proporcional de zonas comunes
+  # ('<total edificio> x <%> = <kWh>'). La versión anterior solo capturaba el
+  # primero, dejando fuera del inventario de emisiones toda la parte común
+  # (~56% del total en las facturas de 2026).
+  consumo:
+    patron: 'Suma\s+parcial\s+HIBERUS\s*([\d.]+)\s*Kwh[\s\S]{0,400}?=\s*([\d.]+)\s*Kwh'
+    confianza: 0.90
+    agregacion: suma_grupos
+
+  periodo:
+    patron: 'PERIODO:\s*(\d{2}/\d{2}/\d{4})\s*-\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.90
+
+  # El separador entre 'T O T A L' y el importe son puntos suspensivos
+  # tipográficos (U+2026), no puntos ASCII: '…………. 11.445,43Eur'.
+  importe:
+    patron: 'T\s*O\s*T\s*A\s*L\s*[.\u2026\s]*([\d.,]+)\s*Eur'
+    confianza: 0.85

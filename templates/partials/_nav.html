@@ -1,0 +1,61 @@
+    <ul class="nav nav-tabs mb-4" id="mainTabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="tab-carga-btn" href="#" onclick="switchTab('carga');return false;">
+                <i class="fa-solid fa-upload me-1"></i>Cargar Facturas
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-historial-btn" href="#" onclick="switchTab('historial');return false;">
+                <i class="fa-solid fa-table me-1"></i>Historial
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-factores-btn" href="#" onclick="switchTab('factores');return false;">
+                <i class="fa-solid fa-sliders me-1"></i>Factores de Emisión
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-recalculo-btn" href="#" onclick="switchTab('recalculo');return false;">
+                <i class="fa-solid fa-arrows-rotate me-1"></i>Recálculo
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-estimaciones-btn" href="#" onclick="switchTab('estimaciones');return false;">
+                <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Estimaciones
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-dashboard-btn" href="#" onclick="switchTab('dashboard');return false;">
+                <i class="fa-solid fa-gauge-high me-1"></i>Dashboard ESG
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-alertas-btn" href="#" onclick="switchTab('alertas');return false;">
+                <i class="fa-solid fa-bell me-1"></i>Alertas
+                <span class="badge bg-danger ms-1" id="badge-alertas-criticas" style="display:none;">0</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-ghg-btn" href="#" onclick="switchTab('ghg');return false;">
+                <i class="fa-solid fa-file-contract me-1"></i>Informe GHG
+            </a>
+        </li>
+        <li class="nav-item" id="nav-admin-item" style="display:none;">
+            <a class="nav-link" id="tab-admin-btn" href="#" onclick="switchTab('admin');return false;">
+                <i class="fa-solid fa-screwdriver-wrench me-1"></i>Admin
+            </a>
+        </li>
+    </ul>
+    <script>
+        // La pestaña Admin solo se muestra si ALLOW_ADMIN_MAESTROS=true.
+        // La visibilidad se decide en el cliente consultando /api/admin/estado,
+        // para no requerir cambios en el renderizado Jinja del servidor.
+        (function(){
+            fetch('/api/admin/estado').then(function(r){return r.json();}).then(function(d){
+                if(d && d.exito && d.admin_habilitado){
+                    var li=document.getElementById('nav-admin-item');
+                    if(li){ li.style.display=''; }
+                }
+            }).catch(function(){ /* si falla, admin queda oculto */ });
+        })();
+    </script>

@@ -1,0 +1,95 @@
+    <!-- TAB FACTORES DE EMISIÓN -->
+    <div id="tab-factores" style="display:none;">
+
+        <!-- Sub-tabs: Factores | Fuentes -->
+        <ul class="nav nav-pills mb-3" id="subTabsFactores">
+            <li class="nav-item">
+                <a class="nav-link active" id="sub-tab-factores-btn" href="#"
+                onclick="switchSubTab('factores-lista');return false;">
+                    <i class="fa-solid fa-table-list me-1"></i>Factores
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="sub-tab-fuentes-btn" href="#"
+                onclick="switchSubTab('fuentes-lista');return false;">
+                    <i class="fa-solid fa-book me-1"></i>Fuentes bibliográficas
+                </a>
+            </li>
+        </ul>
+
+        <!-- ── Panel Factores ───────────────────────────── -->
+        <div id="sub-tab-factores-lista">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex gap-2 flex-wrap">
+                    <select id="filtro-pais-factor" class="form-select form-select-sm" style="width:130px;"
+                            onchange="cargarFactores()">
+                        <option value="">Todos los países</option>
+                        <option value="AR">Argentina</option>
+                        <option value="CL">Chile</option>
+                        <option value="CO">Colombia</option>
+                        <option value="EC">Ecuador</option>
+                        <option value="ES">España</option>
+                        <option value="MX">México</option>
+                    </select>
+                    <input type="text" id="filtro-anio-factor" class="form-control form-control-sm"
+                        style="width:100px;" placeholder="Año" onkeyup="cargarFactores()">
+                    <div class="form-check form-switch ms-1 d-flex align-items-center">
+                        <input class="form-check-input me-1" type="checkbox" id="filtro-solo-activos"
+                            checked onchange="cargarFactores()">
+                        <label class="form-check-label" for="filtro-solo-activos" style="font-size:.85rem;">
+                            Solo activos
+                        </label>
+                    </div>
+                </div>
+                <button class="btn btn-sm text-white" style="background:var(--primary);"
+                        onclick="abrirModalNuevoFactor()">
+                    <i class="fa-solid fa-plus me-1"></i>Nuevo factor
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover tabla-historial">
+                    <thead>
+                        <tr>
+                            <th>País</th><th>Energía</th><th>Año</th><th>Versión</th>
+                            <th>Factor (kg CO₂eq/MWh)</th><th>Unidad</th>
+                            <th>Fuente</th><th>Vigencia desde</th><th>Estado</th><th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaFactoresBody">
+                        <tr><td colspan="10" class="text-center text-muted py-4">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── Panel Fuentes ────────────────────────────── -->
+        <div id="sub-tab-fuentes-lista" style="display:none;">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted" style="font-size:.9rem;">
+                    Fuentes bibliográficas de los factores de emisión
+                </span>
+                <button class="btn btn-sm text-white" style="background:var(--primary);"
+                        onclick="abrirModalNuevaFuente()">
+                    <i class="fa-solid fa-plus me-1"></i>Nueva fuente
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover tabla-historial">
+                    <thead>
+                        <tr>
+                            <th>Código</th><th>Nombre</th><th>Organización</th>
+                            <th>Año pub.</th><th>URL</th><th>Notas</th><th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaFuentesBody">
+                        <tr><td colspan="7" class="text-center text-muted py-4">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>

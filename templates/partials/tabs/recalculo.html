@@ -1,0 +1,84 @@
+    <!-- TAB RECÁLCULO -->
+    <div id="tab-recalculo" style="display:none;">
+
+        <div class="form-section mb-3">
+            <h5><i class="fa-solid fa-arrows-rotate me-2"></i>Parámetros del recálculo</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Alcance</label>
+                    <select id="rc-alcance" class="form-select" onchange="onAlcanceChange()">
+                        <option value="completo">Completo (todo el histórico)</option>
+                        <option value="pais">Por país</option>
+                        <option value="anio">Por año</option>
+                        <option value="sede">Por sede</option>
+                        <option value="individual">Factura individual</option>
+                    </select>
+                </div>
+                <div class="col-md-2" id="rc-col-pais" style="display:none;">
+                    <label class="form-label">País</label>
+                    <select id="rc-pais" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="AR">Argentina</option>
+                        <option value="CL">Chile</option>
+                        <option value="CO">Colombia</option>
+                        <option value="EC">Ecuador</option>
+                        <option value="ES">España</option>
+                        <option value="MX">México</option>
+                    </select>
+                </div>
+                <div class="col-md-2" id="rc-col-sede" style="display:none;">
+                    <label class="form-label">Sede</label>
+                    <input type="text" id="rc-sede" class="form-control" placeholder="Ej. Madrid">
+                </div>
+                <div class="col-md-2" id="rc-col-anio" style="display:none;">
+                    <label class="form-label">Año</label>
+                    <input type="number" id="rc-anio" class="form-control" min="2000" max="2100" placeholder="2025">
+                </div>
+                <div class="col-md-2" id="rc-col-fid" style="display:none;">
+                    <label class="form-label">ID Factura</label>
+                    <input type="number" id="rc-factura-id" class="form-control" min="1" placeholder="123">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Motivo</label>
+                    <input type="text" id="rc-motivo" class="form-control" placeholder="Actualización de factor...">
+                </div>
+            </div>
+            <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-outline-primary btn-sm" onclick="analizarImpacto()">
+                    <i class="fa-solid fa-magnifying-glass me-1"></i>Analizar impacto
+                </button>
+                <button class="btn btn-sm text-white" style="background:var(--primary);" id="btnEjecutarRecalc" onclick="ejecutarRecalculo()" disabled>
+                    <i class="fa-solid fa-play me-1"></i>Ejecutar recálculo
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel análisis de impacto -->
+        <div id="rc-impacto" style="display:none;" class="mb-4">
+            <div class="form-section">
+                <h5><i class="fa-solid fa-chart-bar me-2"></i>Análisis de impacto previo</h5>
+                <div id="rc-impacto-body"></div>
+            </div>
+        </div>
+
+        <!-- Historial de lotes de recálculo -->
+        <div class="form-section">
+            <h5><i class="fa-solid fa-clock-rotate-left me-2"></i>Historial de recálculos</h5>
+            <div class="table-responsive">
+                <table class="table table-hover tabla-historial">
+                    <thead><tr>
+                        <th>Fecha</th><th>Alcance</th><th>Filtros</th>
+                        <th>Facturas</th><th>Estado</th>
+                        <th>Emisiones antes</th><th>Emisiones después</th><th>Δ</th>
+                        <th>Usuario</th><th>Motivo</th>
+                    </tr></thead>
+                    <tbody id="rc-historial-body">
+                        <tr><td colspan="10" class="text-center text-muted py-3">Sin recálculos registrados</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary mt-2" onclick="cargarHistorialRecalculos()">
+                <i class="fa-solid fa-refresh me-1"></i>Actualizar
+            </button>
+        </div>
+    </div>

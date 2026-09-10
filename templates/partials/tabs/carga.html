@@ -1,0 +1,70 @@
+    <!-- TAB CARGA -->
+    <div id="tab-carga">
+
+        <div class="form-section">
+            <h5><i class="fa-solid fa-location-dot me-2"></i>1. Ubicacion</h5>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Pais</label>
+                    <select id="pais" class="form-select" onchange="actualizarSedes()">
+                        <option value="">-- Selecciona pais --</option>
+                        <option value="AR">Argentina</option>
+                        <option value="CL">Chile</option>
+                        <option value="CO">Colombia</option>
+                        <option value="EC">Ecuador</option>
+                        <option value="MX">Mexico</option>
+                        <option value="ES">Espana</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Sede</label>
+                    <select id="sede" class="form-select">
+                        <option value="">-- Selecciona sede --</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Sociedad <small class="text-muted">(solo si la factura no la trae)</small></label>
+                    <input type="text" id="sociedad_manual" class="form-control" placeholder="Ej: HIBERUS DIGITAL S.L.">
+                    <small class="text-muted" style="font-size:.75rem;">
+                        Se usa solo como respaldo: si la factura indica la sociedad, manda la de la factura.
+                        Una sede puede tener varios CUPS de sociedades distintas.
+                    </small>                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>2. Facturas PDF</h5>
+                <button class="btn btn-sm btn-outline-danger" id="btnLimpiarLista" onclick="limpiarListaArchivos()" style="display:none;">
+                    <i class="fa-solid fa-trash-can me-1"></i>Limpiar lista
+                </button>
+            </div>
+            <div class="upload-area mt-2" id="uploadArea" onclick="document.getElementById('archivos').click()">
+                <i class="fa-solid fa-cloud-arrow-up fa-3x mb-3" style="color:var(--secondary);"></i>
+                <p class="mb-1"><strong>Arrastra aqui tus PDFs</strong> o haz clic para seleccionar</p>
+                <small class="text-muted">Multiples archivos permitidos - Solo PDF - Max. 50 MB por archivo</small>
+                <input type="file" id="archivos" style="display:none;" accept=".pdf" multiple onchange="agregarArchivos(this.files)">
+            </div>
+            <div id="listaArchivos" class="mt-3"></div>
+            <button class="btn btn-lg w-100 mt-3 text-white fw-bold" id="btnProcesar"
+                    style="background:var(--primary);" onclick="procesarFacturas()" disabled>
+                <i class="fa-solid fa-bolt me-2"></i>PROCESAR FACTURAS
+            </button>
+        </div>
+
+        <div class="form-section" id="seccionProgreso">
+            <h5 id="titProgreso"><i class="fa-solid fa-spinner fa-spin me-2"></i>3. Procesando...</h5>
+            <div class="progress mb-3" style="height:10px;">
+                <div id="barraGlobal" class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                     style="width:0%;transition:width .5s;"></div>
+            </div>
+            <p id="textoProgreso" class="text-muted mb-3" style="font-size:.85rem;"></p>
+            <div id="listaProgreso"></div>
+        </div>
+
+        <div class="form-section" id="resumenLote">
+            <h5><i class="fa-solid fa-circle-check me-2" style="color:#28a745;"></i>4. Resumen del Lote</h5>
+            <div id="contenidoResumen"></div>
+        </div>
+
+    </div>

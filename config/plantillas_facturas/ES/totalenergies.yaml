@@ -1,0 +1,77 @@
+version_esquema: 2
+
+codigo: totalenergies
+nombre_canonico: "TotalEnergies"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - fecha_factura
+  - cups
+  - tarifa
+  - potencia
+  - contrato
+  - importe
+  - distribuidora
+  - sociedad
+  - direccion
+
+patrones_deteccion:
+  - "TOTALENERGIES ELECTRICIDAD Y GAS"
+  - "atencionalcliente@totalenergies.com"
+  - "TOTALENERGIES"
+
+reglas_extraccion:
+
+  # 'Término Energía Variable' es el bloque que liquida la energía realmente
+  # facturada. Solo aparecen los periodos con consumo (típicamente P1, P2 y
+  # P6), por lo que los grupos 2..6 son opcionales y se suman los presentes.
+  consumo:
+    patron: 'T[ée]rmino\s+Energ[íi]a\s+Variable\s*\n?P1\s+([\d.,]+)\s*kWh[^\n]*\n?(?:P2\s+([\d.,]+)\s*kWh[^\n]*\n?)?(?:P3\s+([\d.,]+)\s*kWh[^\n]*\n?)?(?:P4\s+([\d.,]+)\s*kWh[^\n]*\n?)?(?:P5\s+([\d.,]+)\s*kWh[^\n]*\n?)?(?:P6\s+([\d.,]+)\s*kWh[^\n]*)?'
+    confianza: 0.90
+    agregacion: suma_grupos
+
+  periodo:
+    patron: 'Periodo\s+de\s+facturaci[óo]n:\s*De\s*(\d{2}/\d{2}/\d{4})\s*al\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.95
+
+  fecha_factura:
+    patron: 'Fecha\s+emisi[óo]n\s+factura:\s*(\d{1,2}\s+de\s+[A-Za-zñÑáéíóú]+\s+de\s+\d{4})'
+    confianza: 0.93
+
+  cups:
+    patron: '\(CUPS\):\s*(ES[A-Z0-9]{18,22})'
+    confianza: 0.99
+
+  tarifa:
+    patron: 'Peaje\s+de\s+acceso:\s*([236]\.[01]TD)'
+    confianza: 0.95
+
+  potencia:
+    patron: 'Potencia\s+contratada:\s*P1\s+([\d.,]+)'
+    confianza: 0.90
+
+  contrato:
+    patron: 'contrato\s+de\s+suministro\s*\([^)]*\):\s*(\d+)'
+    confianza: 0.90
+
+  importe:
+    patron: 'Total\s+importe\s+factura:\s*([\d.,]+)\s*€'
+    confianza: 0.92
+
+  distribuidora:
+    patron: 'contrato\s+de\s+acceso\s*\(([^)]+)\)'
+    confianza: 0.88
+
+  sociedad:
+    patron: 'Titular:\s*([^\n]{3,60}?)\s+CIF/NIF'
+    confianza: 0.92
+
+  # Hay 'Dirección Fiscal:' y 'Dirección de suministro:'; el genérico se
+  # quedaba con la primera que encontrase. Verificado en 2/2 facturas de 2026.
+  direccion:
+    patron: 'Direcci[óo]n\s+de\s+suministro:\s*([^\n]{10,90})'
+    confianza: 0.90

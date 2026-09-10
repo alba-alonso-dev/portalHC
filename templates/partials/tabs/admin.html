@@ -1,0 +1,180 @@
+<!-- TAB ADMIN (datos maestros) -->
+<div id="tab-admin" style="display:none;">
+
+    <!-- Banner de estado del modo admin -->
+    <div id="admin-banner" class="alert mb-3" style="display:none;"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0"><i class="fa-solid fa-screwdriver-wrench me-1"></i>Gestión de datos maestros</h5>
+        <div class="form-check form-switch d-flex align-items-center">
+            <input class="form-check-input me-1" type="checkbox" id="admin-incluir-inactivos"
+                   onchange="adminRecargar()">
+            <label class="form-check-label" for="admin-incluir-inactivos" style="font-size:.85rem;">
+                Mostrar inactivos
+            </label>
+        </div>
+    </div>
+
+    <!-- Sub-tabs: Países | Sedes | Sociedades | Comercializadoras | Tipos energía | Suministros -->
+    <ul class="nav nav-pills mb-3" id="subTabsAdmin">
+        <li class="nav-item">
+            <a class="nav-link active" id="sub-tab-paises-btn" href="#"
+               onclick="adminSwitchSubTab('paises');return false;">
+                <i class="fa-solid fa-flag me-1"></i>Países
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="sub-tab-sedes-btn" href="#"
+               onclick="adminSwitchSubTab('sedes');return false;">
+                <i class="fa-solid fa-building me-1"></i>Sedes
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="sub-tab-sociedades-btn" href="#"
+               onclick="adminSwitchSubTab('sociedades');return false;">
+                <i class="fa-solid fa-building-circle-check me-1"></i>Sociedades
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="sub-tab-comercializadoras-btn" href="#"
+               onclick="adminSwitchSubTab('comercializadoras');return false;">
+                <i class="fa-solid fa-bolt me-1"></i>Comercializadoras
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="sub-tab-tipos-btn" href="#"
+               onclick="adminSwitchSubTab('tipos');return false;">
+                <i class="fa-solid fa-plug-circle-bolt me-1"></i>Tipos de energía
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="sub-tab-suministros-btn" href="#"
+               onclick="adminSwitchSubTab('suministros');return false;">
+                <i class="fa-solid fa-gauge me-1"></i>Suministros
+            </a>
+        </li>
+    </ul>
+
+    <!-- ── Países ───────────────────────────────────── -->
+    <div id="sub-tab-paises-panel">
+        <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-sm btn-success" onclick="adminAbrirModalPais()">
+                <i class="fa-solid fa-plus me-1"></i>Nuevo país
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Código</th><th>Nombre</th><th>Zona horaria</th>
+                        <th class="text-center">Activo</th><th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-tbody-paises"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ── Sedes ────────────────────────────────────── -->
+    <div id="sub-tab-sedes-panel" style="display:none;">
+        <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-sm btn-success" onclick="adminAbrirModalSede()">
+                <i class="fa-solid fa-plus me-1"></i>Nueva sede
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th><th>País</th><th>Nombre</th><th>Dirección</th>
+                        <th class="text-center">Activo</th><th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-tbody-sedes"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ── Sociedades ────────────────────────────────── -->
+    <div id="sub-tab-sociedades-panel" style="display:none;">
+        <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-sm btn-success" onclick="adminAbrirModalSociedad()">
+                <i class="fa-solid fa-plus me-1"></i>Nueva sociedad
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th><th>Nombre</th><th>CIF/NIF</th><th>País</th>
+                        <th class="text-center">Activo</th><th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-tbody-sociedades"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ── Comercializadoras ────────────────────────── -->
+    <div id="sub-tab-comercializadoras-panel" style="display:none;">
+        <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-sm btn-success" onclick="adminAbrirModalComercializadora()">
+                <i class="fa-solid fa-plus me-1"></i>Nueva comercializadora
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th><th>País</th><th>Nombre</th><th>Tipo energía</th>
+                        <th class="text-center">Activo</th><th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-tbody-comercializadoras"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ── Tipos de energía ─────────────────────────── -->
+    <div id="sub-tab-tipos-panel" style="display:none;">
+        <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-sm btn-success" onclick="adminAbrirModalTipoEnergia()">
+                <i class="fa-solid fa-plus me-1"></i>Nuevo tipo de energía
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Código</th><th>Nombre</th><th>Unidad medida</th>
+                        <th>Unidad emisión</th>
+                        <th class="text-center">Activo</th><th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-tbody-tip"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ── Suministros ──────────────────────────────── -->
+    <div id="sub-tab-suministros-panel" style="display:none;">
+        <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-sm btn-success" onclick="adminAbrirModalSuministro()">
+                <i class="fa-solid fa-plus me-1"></i>Nuevo suministro
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th><th>País</th><th>Sede</th><th>Tipo energía</th>
+                        <th>Referencia</th><th>Sociedad</th><th>Notas</th>
+                        <th class="text-center">Activo</th><th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-tbody-suministros"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

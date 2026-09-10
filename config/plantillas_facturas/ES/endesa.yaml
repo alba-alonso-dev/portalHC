@@ -1,0 +1,54 @@
+version_esquema: 2
+
+codigo: endesa
+nombre_canonico: "Endesa"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - cups
+  - tarifa
+  - contrato
+  - comercializadora
+  - distribuidora
+
+patrones_deteccion:
+  - "ENDESA"
+  - "ENDESA ENERGIA"
+  - "ENDESA ENERGÍA"
+
+zona:
+  comercializadora: [0.04, 0.00, 0.62, 0.20]
+  periodo: [0.45, 0.16, 0.98, 0.44]
+  consumo: [0.44, 0.32, 0.98, 0.75]
+  cups: [0.02, 0.18, 0.70, 0.52]
+
+reglas_extraccion:
+
+  consumo:
+    patron: 'Consumo\s+Total\s+([\d.,]+)\s*kWh'
+    confianza: 0.95
+    agregacion: primer_grupo
+
+  periodo:
+    patron: 'Periodo\s+de\s+facturaci[oó]n:\s*del\s*(\d{2}/\d{2}/\d{4})\s*a\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.95
+
+  cups:
+    patron: 'CUPS:\s*(ES[A-Z0-9]+)'
+    confianza: 0.99
+
+  contrato:
+    patron: 'Referencia\s+de\s+contrato\s+de\s+suministro:\s*([0-9]+)'
+    confianza: 0.95
+
+  tarifa:
+    patron: '(2\.0TD|3\.0TD|6\.1TD)'
+    confianza: 0.90
+
+  distribuidora:
+    patron: 'Distribuidora:\s*([A-Z ]+)'
+    confianza: 0.90

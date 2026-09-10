@@ -1,0 +1,103 @@
+# ──────────────────────────────────────────────────────────────────────────
+# docker-compose.yml — Portal de Datos Ambientales Hiberus
+#
+# Levanta dos servicios:
+#   db      PostgreSQL 16 con volumen persistente para los datos.
+#   portal  La aplicación Flask, que espera a que la BD esté sana.
+#
+# Uso:
+#   docker compose up -d --build    # construir y arrancar
+#   docker compose logs -f          # ver logs
+#   docker compose down             # parar
+#
+# Los datos sobreviven a `down` porque están en volúmenes con nombre
+# (`portal_hc_pgdata` para la BD, `portal_hc_data` para los PDFs).
+# Para borrarlos: `docker compose down -v`.
+# ──────────────────────────────────────────────────────────────────────────
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: portal-hc-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-portal_hc}
+      POSTGRES_USER: ${POSTGRES_USER:-portal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-portal}
+      # Evita que un cambio de locale del host altere el orden de los índices.
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - portal_hc_pgdata:/var/lib/postgresql/data
+    ports:
+      # Solo para inspeccionar la BD desde el host (psql, DBeaver...).
+      # Comentar esta sección si no se quiere exponer el puerto.
+      - "${DB_HOST_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-portal} -d ${POSTGRES_DB:-portal_hc}"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+  portal:
+    build: .
+    image: portal-hc-hiberus:latest
+    container_name: portal-hc-hiberus
+    restart: unless-stopped
+    depends_on:
+      db:
+        # La app ejecuta las migraciones al arrancar, así que la BD tiene que
+        # estar aceptando conexiones antes de levantar el contenedor.
+        condition: service_healthy
+    ports:
+      - "${HOST_PORT:-5000}:5000"
+    environment:
+      # ── Configuración de la app ────────────────────────────────────────
+      FLASK_DEBUG: ${FLASK_DEBUG:-false}
+      PORT: 5000
+      DOCUMENTO_STORAGE: ${DOCUMENTO_STORAGE:-local}
+
+      # ── Base de datos PostgreSQL ───────────────────────────────────────
+      DATABASE_URL: postgresql://${POSTGRES_USER:-portal}:${POSTGRES_PASSWORD:-portal}@db:5432/${POSTGRES_DB:-portal_hc}
+
+      # ── PDFs subidos (volumen montado en /data) ───────────────────────
+      UPLOAD_FOLDER: /data/uploads
+
+      # ── Modo admin (gestión de datos maestros) ─────────────────────────
+      # false = solo lectura. true = permite crear/editar/borrar maestros.
+      ALLOW_ADMIN_MAESTROS: ${ALLOW_ADMIN_MAESTROS:-false}
+
+      # ── Reset de datos (solo desarrollo) ──────────────────────────────
+      # Habilita POST /api/dev/reset-datos. NUNCA en producción.
+      ALLOW_DEV_RESET: ${ALLOW_DEV_RESET:-false}
+
+      # ── Gunicorn ───────────────────────────────────────────────────────
+      # Con PostgreSQL ya no hay limitación de un único escritor, así que
+      # subir workers es efectivo si hay concurrencia real.
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-4}
+
+      # ── PaddleOCR ──────────────────────────────────────────────────────
+      # En contenedores Docker sobre WSL2, PaddlePaddle con oneDNN activado
+      # aborta con SIGABRT ("ConvertPirAttribute2RuntimeAttribute not support").
+      # El SIGABRT es C++ y no se puede capturar con try/except Python, así
+      # que el worker muere. Desactivar oneDNN desde el inicio lo evita.
+      # Es algo más lento pero estable. En local no hace falta.
+      PADDLE_DISABLE_MKLDNN: ${PADDLE_DISABLE_MKLDNN:-true}
+    volumes:
+      # Persistencia de los PDFs subidos.
+      - portal_hc_data:/data
+      # Plantillas de comercializadora: montar config/ para edición sin
+      # reconstruir la imagen. Si no las vas a tocar, comenta estas líneas.
+      - ./config:/app/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  portal_hc_pgdata:
+    # Datos de PostgreSQL. Sobrevive a `docker compose down`.
+  portal_hc_data:
+    # PDFs subidos. Para borrarlo: `docker compose down -v`.

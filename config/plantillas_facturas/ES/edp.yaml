@@ -1,0 +1,37 @@
+version_esquema: 2
+
+codigo: edp
+nombre_canonico: "EDP"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - cups
+  - tarifa
+  - contrato
+
+patrones_deteccion:
+  - "EDP CLIENTES"
+  - "EDP CLIENTES, S.A.U."
+
+reglas_extraccion:
+
+  consumo:
+    patron: 'Consumo\s*\(kWh\).*?Totales.*?(\d+)'
+    confianza: 0.95
+    agregacion: primer_grupo
+
+  periodo:
+    patron: 'Periodo\s+facturaci[oó]n:\s*(\d{2}-\d{2}-\d{4})\s*a\s*(\d{2}-\d{2}-\d{4})'
+    confianza: 0.90
+
+  cups:
+    patron: '(ES\d{16,22}[A-Z]{2,4})'
+    confianza: 0.99
+
+  tarifa:
+    patron: '(2\.0TD|3\.0TD|6\.1TD)'
+    confianza: 0.90

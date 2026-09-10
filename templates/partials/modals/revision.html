@@ -1,0 +1,36 @@
+<div class="modal fade" id="modalRevision" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--primary);color:#fff;">
+                <h5 class="modal-title"><i class="fa-solid fa-magnifying-glass me-2"></i>Revision de datos extraidos</h5>
+                <button type="button" class="btn btn-sm btn-outline-light ms-2" id="btnTogglePdf"
+                        onclick="togglePdfViewer()" title="Mostrar/ocultar PDF">
+                    <i class="fa-solid fa-file-pdf me-1"></i>PDF
+                </button>
+                <button type="button" class="btn-close btn-close-white ms-2" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="d-flex" style="min-height:520px;">
+                    <!-- Formulario campos -->
+                    <div id="modalFormPanel" style="flex:0 0 420px;min-width:320px;max-width:500px;padding:20px;overflow-y:auto;border-right:1px solid #dee2e6;">
+                        <div id="modalBody"></div>
+                    </div>
+                    <!-- Visor PDF -->
+                    <div id="modalPdfPanel" style="flex:1;display:none;flex-direction:column;">
+                        <iframe id="pdfViewer" src="" style="width:100%;height:100%;min-height:520px;border:none;"
+                                title="Factura PDF"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <small class="text-muted me-auto" id="modalInfo"></small>
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="saltarRevision()">
+                    <i class="fa-solid fa-forward-step me-1"></i>Omitir
+                </button>
+                <button type="button" class="btn btn-sm text-white" style="background:var(--primary);" onclick="confirmarRevision()">
+                    <i class="fa-solid fa-check me-1"></i>Confirmar y guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

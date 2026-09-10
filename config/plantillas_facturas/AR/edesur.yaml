@@ -1,0 +1,81 @@
+version_esquema: 2
+
+codigo: edesur
+nombre_canonico: "Edesur"
+pais: AR
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - fecha_factura
+  - tarifa
+  - contrato
+  - importe
+  - sociedad
+  - direccion
+
+# Plantilla NUEVA. Antes de esto Argentina no tenía ninguna plantilla y las
+# facturas de Edesur se resolvían por _COMERCIALIZADORAS_FALLBACK en
+# extraccion_service, que solo asigna el nombre de la comercializadora y no
+# extrae ningún campo.
+patrones_deteccion:
+  - "Empresa Distribuidora Sur"
+  - "edesur.com.ar"
+  - "EDESUR"
+
+reglas_extraccion:
+
+  # La tabla de mediciones cierra con la fila 'E. Tot' (energía total), que
+  # trae lectura anterior, lectura actual, constante, y consumos por franja
+  # antes del total registrado: se toma el último valor de la fila.
+  consumo:
+    patron: 'E\.\s*Tot(?:\s+[\d.,]+){5}\s+([\d.,]+)'
+    confianza: 0.90
+    agregacion: primer_grupo
+
+  # OJO: el patrón anterior ('de\s+Lectura\s+D[ií]as...') casaba en el párrafo
+  # legal 'En este periodo de lectura se produjo un cambio tarifario...' y
+  # devolvía dos fechas cualesquiera del texto siguiente. Se ancla en la
+  # cabecera real de la tabla de mediciones.
+  #
+  # Edesur imprime primero el estado ACTUAL y después el ANTERIOR
+  # ('20/01/2026  22/12/2025'), por eso 'orden: fin_inicio'. Sin él, el
+  # pipeline obtenía ini > fin y descartaba el periodo entero en silencio.
+  periodo:
+    patron: 'Estados\s+al[\s\S]{0,120}?(\d{2}/\d{2}/\d{4})\s+(\d{2}/\d{2}/\d{4})'
+    orden: fin_inicio
+    confianza: 0.90
+
+  # Edesur no rotula la fecha de emisión: la imprime suelta en la cabecera,
+  # entre la localidad y el domicilio de entrega ('Capital Federal 22/01/2026
+  # PATAGONES 2558'). El único anclaje estable es el rótulo contiguo.
+  fecha_factura:
+    patron: 'DOMICILIO\s+DE\s+ENTREGA:[\s\S]{0,80}?(\d{2}/\d{2}/\d{4})'
+    confianza: 0.80
+
+  tarifa:
+    patron: 'Tarifa\s+(T\d+\s*[A-Z]{0,2})'
+    confianza: 0.90
+
+  contrato:
+    patron: 'n[úu]mero\s+de\s+cliente\s+es\s+(\d+)'
+    confianza: 0.92
+
+  importe:
+    patron: 'vence\s+el\s+\d{2}/\d{2}/\d{4}\s*\(\*\)\s*\$\s*([\d.,]+)'
+    confianza: 0.90
+
+  # Edesur no rotula al titular con 'Titular' ni 'Razón social': lo imprime
+  # tras 'At.' en el bloque de destinatario, por lo que los patrones
+  # genéricos devolvían None. Verificado en 6/6 facturas de 2026.
+  sociedad:
+    patron: 'At\.\s*([A-ZÁÉÍÓÚÑ][^\n]{4,60})'
+    confianza: 0.85
+
+  # La dirección va en la misma línea que la fecha de emisión, tras
+  # 'DOMICILIO DE ENTREGA:', y termina antes del rótulo 'CT:'.
+  direccion:
+    patron: 'DOMICILIO\s+DE\s+ENTREGA:[\s\S]{0,90}?\d{2}/\d{2}/\d{4}\s+([^\n]{6,60}?)\s+CT:'
+    confianza: 0.85

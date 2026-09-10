@@ -1,0 +1,42 @@
+version_esquema: 2
+
+codigo: servigas_visalia
+nombre_canonico: "Servigás / Visalia"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - cups
+  - tarifa
+  - contrato
+
+patrones_deteccion:
+  - "VISALIA"
+  - "SERVIGAS"
+  - "GRUPO VISALIA"
+
+reglas_extraccion:
+
+  consumo:
+    patron: 'Energ[ií]a\s+Activa\s+Consumo.*?(\d+).*?(\d+).*?(\d+)'
+    confianza: 0.96
+    agregacion: suma_grupos
+
+  periodo:
+    patron: 'Periodo:\s*(\d{2}/\d{2}/\d{4})\s*-\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.90
+
+  cups:
+    patron: '(ES\d{16,22}[A-Z]{2,4})'
+    confianza: 0.99
+
+  tarifa:
+    patron: '(2\.0TD|3\.0TD|6\.1TD)'
+    confianza: 0.90
+
+  contrato:
+    patron: 'Ref\.\s*Contrato:\s*([0-9\-]+)'
+    confianza: 0.85

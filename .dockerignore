@@ -1,0 +1,42 @@
+# ── Evita copiar al contexto de build lo que no se necesita ──────────────
+# Reduce el tamaño de la imagen y acelera el build.
+
+# Entornos virtuales locales
+venv/
+.venv/
+env/
+
+# Base de datos y backups (se montan como volumen, no se hornean en la imagen)
+facturas_hc.db
+facturas_hc.db-*
+facturas_hc.db.bak*
+facturas_hc.db.bak_*
+*.db
+*.db.bak*
+
+# Documentos subidos (se montan como volumen persistente)
+uploads/
+
+# Migraciones: ficheros de lock
+.migration.lock
+
+# Control de versiones e IDE
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentación y archivos de planificación no necesarios en la imagen
+Planning.html
+
+# Sistema / SO
+.DS_Store
+Thumbs.db

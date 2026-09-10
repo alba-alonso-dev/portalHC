@@ -1,0 +1,46 @@
+        :root{--primary:#1e3c72;--secondary:#2a5298;}
+        body{background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);min-height:100vh;font-family:'Segoe UI',sans-serif;}
+        .container-main{background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);padding:36px;margin:24px auto;}
+        .header{text-align:center;border-bottom:3px solid var(--primary);padding-bottom:16px;margin-bottom:24px;}
+        .header h1{color:var(--primary);font-weight:700;font-size:1.8rem;margin:0;}
+        .header p{color:#666;margin-top:6px;margin-bottom:0;}
+        .form-section{background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:24px;}
+        .form-section h5{color:var(--primary);font-weight:700;margin-bottom:16px;}
+        .upload-area{border:2px dashed var(--secondary);border-radius:8px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;}
+        .upload-area:hover,.upload-area.drag-over{background:#f0f4ff;border-color:var(--primary);}
+        .archivo-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border:1px solid #dee2e6;border-radius:6px;margin-top:6px;}
+        .archivo-item .nombre{flex:1;font-size:.87rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .archivo-item .tamanio{color:#888;font-size:.78rem;white-space:nowrap;}
+        .progreso-archivo{background:#fff;border:1px solid #dee2e6;border-radius:8px;padding:12px 16px;margin-top:8px;}
+        .field-revision{padding:10px;border-radius:6px;margin-bottom:10px;}
+        .field-revision.low{background:#fff8e1;border-left:3px solid #ffc107;}
+        .field-revision.ok{background:#f1f8e9;border-left:3px solid #4caf50;}
+        .nav-tabs .nav-link{color:#555;font-weight:600;}
+        .nav-tabs .nav-link.active{color:var(--primary);border-bottom:3px solid var(--primary);}
+        .stat-card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:16px;text-align:center;}
+        .stat-card .number{font-size:2rem;font-weight:700;color:var(--primary);}
+        .stat-card .label{color:#666;font-size:.78rem;margin-top:4px;}
+        .tabla-historial th{background:#f8f9fa;font-size:.82rem;}
+        .tabla-historial td{font-size:.82rem;vertical-align:middle;}
+        .badge-estado-procesada{background:#d4edda;color:#155724;}
+        .badge-estado-confirmada{background:#cce5ff;color:#004085;}
+        .badge-estado-pendiente_revision{background:#fff3cd;color:#856404;}
+        #resumenLote{display:none;}
+        #seccionProgreso{display:none;}
+        .kpi-card{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:10px;padding:20px;text-align:center;}
+        .kpi-card .kpi-num{font-size:2.2rem;font-weight:700;line-height:1.1;}
+        .kpi-card .kpi-lbl{font-size:.78rem;opacity:.85;margin-top:4px;}
+        .kpi-card.green{background:linear-gradient(135deg,#1b7a4a,#27ae60);}
+        .kpi-card.orange{background:linear-gradient(135deg,#c07d00,#f39c12);}
+        .kpi-card.red{background:linear-gradient(135deg,#922b21,#e74c3c);}
+        .kpi-card.gray{background:linear-gradient(135deg,#555,#888);}
+        .progress-bar-real{background:#27ae60;}
+        .progress-bar-est{background:#f39c12;}
+        .progress-bar-gap{background:#e74c3c;}
+        .kpi-card.purple{background:linear-gradient(135deg,#6c3483,#9b59b6);}
+        .alerta-critica{border-left:4px solid #e74c3c;background:#fdecea;}
+        .alerta-media{border-left:4px solid #f39c12;background:#fff8e1;}
+        .alerta-informativa{border-left:4px solid #3498db;background:#eaf4fb;}
+        .badge-critica{background:#e74c3c;color:#fff;}
+        .badge-media{background:#f39c12;color:#fff;}
+        .badge-informativa{background:#3498db;color:#fff;}

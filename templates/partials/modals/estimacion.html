@@ -1,0 +1,62 @@
+<!-- MODAL ESTIMACIÓN -->
+<div class="modal fade" id="modalEstimacion" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--secondary);color:#fff;">
+                <h5 class="modal-title"><i class="fa-solid fa-wand-magic-sparkles me-2"></i>Nueva estimación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">País <span class="text-danger">*</span></label>
+                        <select id="me-pais" class="form-select">
+                            <option value="">--</option>
+                            <option value="AR">Argentina</option>
+                            <option value="CL">Chile</option>
+                            <option value="CO">Colombia</option>
+                            <option value="EC">Ecuador</option>
+                            <option value="ES">España</option>
+                            <option value="MX">México</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Sede <span class="text-danger">*</span></label>
+                        <input type="text" id="me-sede" class="form-control" placeholder="Ej. Madrid">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Mes (YYYY-MM) <span class="text-danger">*</span></label>
+                        <input type="month" id="me-mes" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Método <span class="text-danger">*</span></label>
+                        <select id="me-metodo" class="form-select" onchange="toggleValorManual()">
+                            <option value="media_historica">Media histórica</option>
+                            <option value="mismo_mes_anio_anterior">Mismo mes año anterior</option>
+                            <option value="adyacente">Meses adyacentes</option>
+                            <option value="manual">Valor manual</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4" id="me-col-manual" style="display:none;">
+                        <label class="form-label">Consumo manual (kWh)</label>
+                        <input type="number" id="me-valor-manual" class="form-control" min="0" step="0.01">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Notas</label>
+                        <input type="text" id="me-notas" class="form-control" placeholder="Observaciones opcionales...">
+                    </div>
+                </div>
+                <div class="alert alert-info mt-3" style="font-size:.84rem;">
+                    <i class="fa-solid fa-circle-info me-1"></i>
+                    El sistema calculará automáticamente las emisiones usando el factor de emisión vigente para el país y año del periodo estimado.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-sm text-white" style="background:var(--secondary);" onclick="guardarEstimacion()">
+                    <i class="fa-solid fa-save me-1"></i>Guardar estimación
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

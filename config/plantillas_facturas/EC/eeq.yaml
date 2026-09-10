@@ -1,0 +1,63 @@
+version_esquema: 2
+
+codigo: eeq
+nombre_canonico: "Empresa Eléctrica Quito"
+pais: EC
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - fecha_factura
+  - tarifa
+  - contrato
+  - importe
+  - sociedad
+  - direccion
+
+# Plantilla NUEVA: sede de Quito. Cuidado al tocar los patrones de consumo:
+# EEQ y CNEL (Guayaquil) usan el mismo maquetador y sus tablas se parecen,
+# pero NO son iguales — ver la nota en cnel.yaml.
+patrones_deteccion:
+  - "Empresa Eléctrica Quito"
+  - "EMPRESA ELECTRICA QUITO"
+  - "E.E.Q"
+
+reglas_extraccion:
+
+  consumo:
+    patron: 'Energ[íi]a\s+activa\s+total\s+\d{2}-\d{2}-\d{4}\s+[\d.,]+\s+[\d.,]+\s+[\d.,]+\s+[\d.,]+\s+([\d.,]+)\s+kWh'
+    confianza: 0.92
+    agregacion: primer_grupo
+
+  periodo:
+    patron: 'Fecha\s+desde\s+(\d{2}-\d{2}-\d{4})\s+Fecha\s+hasta\s+(\d{2}-\d{2}-\d{4})'
+    confianza: 0.95
+
+  fecha_factura:
+    patron: 'Fecha\s+de\s+emisi[óo]n\s*:?\s*(\d{2}-\d{2}-\d{4})'
+    confianza: 0.92
+
+  tarifa:
+    patron: 'Tipo\s+de\s+tarifa\s+ARCONEL\s+(\S+)'
+    confianza: 0.90
+
+  contrato:
+    patron: 'CUENTA\s+CONTRATO\s*(\d+)'
+    confianza: 0.92
+
+  # OJO: el rótulo NO lleva dos puntos ('Razón social RIBMON SOCIEDAD ...'),
+  # por eso los patrones genéricos de extraccion_service, que exigen ':' o
+  # '-', devolvían None. Verificado en 7/7 facturas de 2026.
+  sociedad:
+    patron: 'Raz[óo]n\s+social\s*:?\s*([A-ZÁÉÍÓÚÑ][^\n]{4,60})'
+    confianza: 0.90
+
+  direccion:
+    patron: 'Direcci[óo]n\s+del\s+servicio\s+([^\n]{8,90})'
+    confianza: 0.90
+
+  importe:
+    patron: 'VALOR\s+TOTAL:?\s*\$?\s*([\d.,]+)'
+    confianza: 0.90

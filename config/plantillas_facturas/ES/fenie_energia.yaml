@@ -1,0 +1,56 @@
+version_esquema: 2
+
+codigo: fenie_energia
+nombre_canonico: "Fenie Energía"
+pais: ES
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - cups
+  - tarifa
+  - contrato
+  - potencia
+  - comercializadora
+  - distribuidora
+
+patrones_deteccion:
+  - "FENIE ENERGIA"
+  - "FENIE ENERGÍA"
+  - "clientes@fenieenergia.es"
+  - "www.fenieenergia.es"
+
+zona:
+  comercializadora: [0.00, 0.00, 0.60, 0.20]
+  periodo: [0.15, 0.05, 0.80, 0.25]
+  consumo: [0.00, 0.20, 1.00, 0.95]
+  cups: [0.00, 0.00, 0.80, 0.25]
+
+reglas_extraccion:
+
+  consumo:
+    patron: 'Consumo:\s*([\d.,]+).*?([\d.,]+).*?([\d.,]+)'
+    confianza: 0.95
+    agregacion: suma_grupos
+
+  periodo:
+    patron: 'Periodo\s+Facturaci[oó]n:\s*(\d{2}/\d{2}/\d{4})\s*-\s*(\d{2}/\d{2}/\d{4})'
+    confianza: 0.95
+
+  cups:
+    patron: '(ES\d{16,22}[A-Z0-9]{2,4})'
+    confianza: 0.99
+
+  tarifa:
+    patron: 'Tarifa:\s*(2\.0TD|3\.0TD|6\.1TD)'
+    confianza: 0.99
+
+  contrato:
+    patron: 'N[ºo]\s*de\s*Contrato:\s*([A-Z0-9\-_\. ]+)'
+    confianza: 0.90
+
+  distribuidora:
+    patron: 'Empresa\s+Distribuidora:\s*([A-Z\- ]+)'
+    confianza: 0.90

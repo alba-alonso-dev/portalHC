@@ -1,0 +1,100 @@
+<!-- MODAL FACTOR (crear / nueva versión / metadatos) -->
+<div class="modal fade" id="modalFactor" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--primary);color:#fff;">
+                <h5 class="modal-title" id="modalFactorTitulo">Factor de Emisión</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="mf-mode">
+                <input type="hidden" id="mf-factor-id">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">País <span class="text-danger">*</span></label>
+                        <select id="mf-pais" class="form-select">
+                            <option value="">--</option>
+                            <option value="AR">Argentina</option>
+                            <option value="CL">Chile</option>
+                            <option value="CO">Colombia</option>
+                            <option value="EC">Ecuador</option>
+                            <option value="ES">España</option>
+                            <option value="MX">México</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Año <span class="text-danger">*</span></label>
+                        <input type="number" id="mf-anio" class="form-control"
+                               min="2000" max="2100" placeholder="2025">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Tipo de energía</label>
+                        <select id="mf-tipo-energia" class="form-select">
+                            <option value="electricidad">Electricidad</option>
+                            <option value="gas">Gas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Factor (kg CO₂eq/MWh) <span class="text-danger">*</span></label>
+                        <input type="number" id="mf-valor" class="form-control"
+                               step="0.0001" min="0" placeholder="250.5">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Unidad</label>
+                        <input type="text" id="mf-unidad" class="form-control"
+                               value="kg CO2eq/MWh">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Fuente <span class="text-danger">*</span></label>
+                        <select id="mf-fuente-id" class="form-select">
+                            <option value="">-- Selecciona --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Vigencia desde</label>
+                        <input type="date" id="mf-vigencia-desde" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Vigencia hasta</label>
+                        <input type="date" id="mf-vigencia-hasta" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Descripción</label>
+                        <input type="text" id="mf-descripcion" class="form-control"
+                               placeholder="Descripción opcional">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Notas</label>
+                        <textarea id="mf-notas" class="form-control" rows="2"
+                                  placeholder="Observaciones internas..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                        data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-sm text-white"
+                        style="background:var(--primary);" onclick="guardarFactor()">
+                    <i class="fa-solid fa-save me-1"></i>Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL HISTORIAL FACTOR -->
+<div class="modal fade" id="modalHistorialFactor" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--secondary);color:#fff;">
+                <h5 class="modal-title">
+                    <i class="fa-solid fa-clock-rotate-left me-2"></i>Historial del factor
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalHistorialFactorBody">
+                <p class="text-muted">Cargando...</p>
+            </div>
+        </div>
+    </div>
+</div>

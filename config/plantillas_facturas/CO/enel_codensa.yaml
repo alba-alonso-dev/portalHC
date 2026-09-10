@@ -1,0 +1,56 @@
+version_esquema: 2
+
+codigo: enel_codensa
+nombre_canonico: "Enel Colombia"
+pais: CO
+
+categoria: comercializadora
+
+# Se declara campos_disponibles SOLO para excluir 'fecha_factura'. El resto es
+# la lista por defecto (CAMPOS_EXTRAIBLES_DEFECTO) tal cual, para no cambiar
+# ningún otro comportamiento. Ver la nota sobre fecha_factura más abajo.
+campos_disponibles:
+  - consumo
+  - periodo
+  - cups
+  - comercializadora
+  - direccion
+  - sociedad
+
+patrones_deteccion:
+  - "ENEL COLOMBIA"
+  - "CODENSA"
+  - "ENEL X"
+  - "Enel"
+
+# PLANTILLA DE SOLO DETECCIÓN — deliberadamente sin reglas_extraccion.
+#
+# Las facturas de Enel/Codensa de la sede de Bogotá son PDFs maquetados en
+# columnas que pdfplumber devuelve con el texto entrelazado: los caracteres de
+# columnas contiguas se intercalan en la misma línea, de forma que rótulo y
+# valor quedan mezclados y no hay anclaje textual estable. Cualquier regex
+# escrita sobre ese texto casaría por casualidad en unas facturas y devolvería
+# un número equivocado en otras, que es peor que no extraer nada: el consumo
+# entraría en el cálculo de emisiones sin que nadie lo revise.
+#
+# Se deja sin reglas a propósito para que:
+#   1. la comercializadora SÍ se identifique correctamente, y
+#   2. los campos caigan al extractor genérico, que es conservador y marca la
+#      factura para revisión en vez de inventar valores.
+#
+# Tampoco se declara campos_disponibles: omitir la clave hace que se apliquen
+# los campos por defecto (declararla vacía haría que la factura se diese por
+# procesada con consumo 0).
+#
+# EXCEPCIÓN — 'fecha_factura' SÍ se excluye (arriba). La premisa de que "el
+# extractor genérico es conservador" resultó ser falsa para este campo: al
+# medir el pipeline real sobre las 5 facturas de 2026, las 5 devolvían
+# 2020-12-10 con confianza no nula. Ese valor sale del pie legal
+# "resolución No 9061 de 10 de diciembre de 2020" — no es la fecha de la
+# factura, sino la de una resolución de la CREG. Una fecha silenciosamente
+# equivocada es peor que un campo vacío: no dispara revisión y contamina los
+# informes por ejercicio. Al no declarar el campo, queda a None y visible.
+#
+# PENDIENTE: reprocesar estos PDFs con OCR (ocr_service ya tiene fallback a
+# PaddleOCR) y escribir las reglas sobre el texto rasterizado, que respeta el
+# orden de lectura.

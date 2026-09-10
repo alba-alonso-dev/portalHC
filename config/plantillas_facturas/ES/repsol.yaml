@@ -1,0 +1,39 @@
+version_esquema: 2
+
+codigo: repsol
+nombre_canonico: "Repsol"
+pais: ES
+tipo_energia: electricidad
+
+categoria: comercializadora
+
+campos_disponibles:
+  - consumo
+  - periodo
+  - cups
+
+patrones_deteccion:
+  - "REPSOL"
+
+zona:
+  comercializadora: [0.02, 0.00, 0.62, 0.22]
+  periodo:          [0.40, 0.12, 0.98, 0.44]
+  consumo:          [0.40, 0.30, 0.98, 0.78]
+  cups:             [0.02, 0.18, 0.76, 0.56]
+
+# Migrada del esquema v1 al v2 (ver nota en naturgy.yaml).
+# SIN VALIDAR CONTRA FACTURA REAL: no hay facturas de Repsol en 2026.
+reglas_extraccion:
+
+  consumo:
+    patron: '(?:Consumo\s+electricidad|Consumo\s+total)\s*[:\-]?\s*([\d.,]+)\s*kWh'
+    confianza: 0.91
+    agregacion: primer_grupo
+
+  periodo:
+    patron: '(?:Periodo|Facturaci[oó]n)\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\s*(?:al|a|-)\s*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
+    confianza: 0.90
+
+  cups:
+    patron: 'CUPS\s*[:\-]?\s*(ES\d{16}[A-Z0-9]{0,2})'
+    confianza: 0.90
